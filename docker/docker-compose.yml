@@ -1,0 +1,27 @@
+﻿version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: tarot_user
+      POSTGRES_PASSWORD: tarot_password
+      POSTGRES_DB: tarot_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://tarot_user:tarot_password@db:5432/tarot_db
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
