@@ -1,0 +1,13 @@
+{
+  "folders": [
+    { "path": "." },
+    { "path": "android" }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/.gradle": true,
+      "**/build": true,
+      "**/__pycache__": true
+    }
+  }
+}

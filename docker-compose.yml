@@ -1,0 +1,39 @@
+name: mystic-tarot
+
+services:
+  db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-tarot}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tarot}
+      POSTGRES_DB: ${POSTGRES_DB:-tarot}
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-tarot}:${POSTGRES_PASSWORD:-tarot}@db:5432/${POSTGRES_DB:-tarot}
+      SECRET_KEY: ${SECRET_KEY:-dev-secret-change-me-please-123456}
+      CORS_ORIGINS: ${CORS_ORIGINS:-*}
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      AUTO_CREATE_TABLES: "true"
+      SEED_DATABASE: "true"
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  pgdata:
