@@ -87,6 +87,22 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 
 Свойство попадает в `BuildConfig.API_BASE_URL` при сборке. Backend должен быть запущен и слушать `0.0.0.0:8000` (Docker Compose делает это по умолчанию).
 
+### Если эмулятор не подключается к `10.0.2.2`
+
+На некоторых конфигурациях Windows (WHPX-гипервизор + Docker Desktop) трафик эмулятора к `10.0.2.2:8000` не проходит — OkHttp падает с `SocketTimeoutException: failed to connect to /10.0.2.2 (port 8000)`. Признак: `curl`/браузер на самом ПК к `localhost:8000` работают, а запросы приложения в backend-логи не приходят.
+
+Надёжное обходное решение — `adb reverse`: приложение обращается к `127.0.0.1:8000` внутри эмулятора, а adb заворачивает этот порт напрямую в порт хоста:
+
+```bash
+# один раз перед запуском приложения (после каждого перезапуска эмулятора)
+adb reverse tcp:8000 tcp:8000
+
+# и собрать APK с локальным адресом
+./gradlew assembleDebug -PapiBaseUrl=http://127.0.0.1:8000/
+```
+
+Backend при этом продолжает слушать `0.0.0.0:8000`.
+
 В манифесте включён `android:usesCleartextTraffic="true"` для HTTP при локальной разработке. Для production используйте HTTPS и отключите cleartext.
 
 ## Структура
@@ -186,7 +202,7 @@ keytool -genkeypair -v -keystore release-keystore.jks \
 | `Package platforms not found` | Используйте `platforms;android-37.0` или `android sdk install platforms/android-37.0` |
 | `Unsupported class file major version` | Задайте `JAVA_HOME` на JDK 21 |
 | `NavigationBarItem` не найден | Он является extension-функцией `RowScope`; вызывайте внутри `NavigationBar { ... }` или `RowScope` |
-| Приложение не подключается к API | Проверьте `10.0.2.2` для эмулятора, IP для устройства, `usesCleartextTraffic` и запущенный backend |
+| Приложение не подключается к API | Проверьте `10.0.2.2` для эмулятора, IP для устройства, `usesCleartextTraffic` и запущенный backend. Если запросы так и не доходят до backend, используйте `adb reverse tcp:8000 tcp:8000` и пересоберите с `-PapiBaseUrl=http://127.0.0.1:8000/` |
 | `HTTP 401` | Токен истёк/недействителен — выйдите и войдите снова |
 | `HTTP 409` при регистрации | Email уже занят |
 | `HTTP 422` | Серверная валидация: вопрос 3–500 символов, пароль ≥ 8, имя ≥ 2 |
