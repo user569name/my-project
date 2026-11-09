@@ -13,40 +13,38 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tarot.data.TarotRepository
+import com.example.tarot.data.remote.ReadingDto
 import com.example.tarot.domain.SpreadOption
 import com.example.tarot.ui.components.ErrorBanner
-import com.example.tarot.ui.components.ReadingCardView
+import com.example.tarot.ui.components.SpreadCompactCard
 import com.example.tarot.util.formatReadingDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,15 +52,12 @@ import com.example.tarot.util.formatReadingDate
 fun HomeScreen(
     repository: TarotRepository,
     onLoggedOut: () -> Unit,
-    onOpenArcanika: () -> Unit,
+    onOpenSpreads: () -> Unit,
+    onOpenSpread: (SpreadOption) -> Unit,
+    onOpenReading: (String) -> Unit,
 ) {
     val viewModel: HomeViewModel = viewModel(factory = HomeViewModel.factory(repository))
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val focusManager = LocalFocusManager.current
-
-    LaunchedEffect(state.reading?.id) {
-        if (state.reading != null) focusManager.clearFocus()
-    }
 
     Scaffold(
         containerColor = Color.Transparent,
@@ -78,7 +73,7 @@ fun HomeScreen(
                 actions = {
                     IconButton(onClick = onLoggedOut) {
                         Icon(
-                            imageVector = Icons.Default.ExitToApp,
+                            imageVector = Icons.AutoMirrored.Filled.ExitToApp,
                             contentDescription = "Выйти из аккаунта",
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -103,110 +98,10 @@ fun HomeScreen(
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "Сформулируйте вопрос — и позвольте картам ответить.",
+                        text = "Карты готовы помочь разобраться в том, что важно.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
-                }
-            }
-
-            item {
-                OutlinedButton(
-                    onClick = onOpenArcanika,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Star,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp),
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Открыть Arcanika — расклады Таро")
-                }
-            }
-
-            item {
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(24.dp),
-                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
-                    border = BorderStroke(
-                        1.dp,
-                        MaterialTheme.colorScheme.primary.copy(alpha = 0.25f),
-                    ),
-                ) {
-                    Column(
-                        modifier = Modifier.padding(18.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                    ) {
-                        Text(
-                            text = "Ваш вопрос",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold,
-                        )
-                        OutlinedTextField(
-                            value = state.question,
-                            onValueChange = viewModel::onQuestionChange,
-                            modifier = Modifier.fillMaxWidth(),
-                            placeholder = { Text("О чём вы хотите спросить карты?") },
-                            minLines = 2,
-                            maxLines = 4,
-                            enabled = !state.isDrawing,
-                            supportingText = {
-                                Text(
-                                    text = "${state.question.length}/500",
-                                    style = MaterialTheme.typography.labelSmall,
-                                )
-                            },
-                        )
-                    }
-                }
-            }
-
-            item {
-                Text(
-                    text = "Выберите расклад",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                )
-            }
-
-            items(SpreadOption.entries, key = { it.name }) { option ->
-                SpreadOptionCard(
-                    option = option,
-                    selected = state.spread == option,
-                    enabled = !state.isDrawing,
-                    onClick = { viewModel.onSpreadChange(option) },
-                )
-            }
-
-            item {
-                Button(
-                    onClick = viewModel::draw,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(54.dp),
-                    enabled = !state.isDrawing,
-                ) {
-                    if (state.isDrawing) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(22.dp),
-                            strokeWidth = 2.dp,
-                            color = MaterialTheme.colorScheme.onPrimary,
-                        )
-                        Spacer(modifier = Modifier.width(10.dp))
-                        Text("Карты перемешиваются...")
-                    } else {
-                        Icon(
-                            imageVector = Icons.Default.Star,
-                            contentDescription = null,
-                            modifier = Modifier.size(20.dp),
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Открыть карты", style = MaterialTheme.typography.titleMedium)
-                    }
                 }
             }
 
@@ -216,49 +111,135 @@ fun HomeScreen(
                 }
             }
 
-            state.reading?.let { reading ->
-                item {
-                    Column(modifier = Modifier.padding(top = 8.dp)) {
+            item {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(26.dp),
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.09f),
+                    border = BorderStroke(
+                        1.dp,
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.32f),
+                    ),
+                ) {
+                    Column(
+                        modifier = Modifier.padding(20.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text(
+                                text = "✦",
+                                style = MaterialTheme.typography.displaySmall,
+                                color = MaterialTheme.colorScheme.primary,
+                            )
+                            Spacer(modifier = Modifier.weight(1f))
+                            Text(
+                                text = "M Y S T I C",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.primary,
+                            )
+                        }
                         Text(
-                            text = "Ваш расклад",
+                            text = "Новый расклад",
                             style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.SemiBold,
                         )
-                        Spacer(modifier = Modifier.height(6.dp))
                         Text(
-                            text = reading.question,
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurface,
+                            text = "Выберите схему из каталога — вопрос зададите перед гаданием. Результат сохранится в истории.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = "${reading.spreadLabel} · ${formatReadingDate(reading.createdAt)}",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.secondary,
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Button(
+                            onClick = onOpenSpreads,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(50.dp),
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Star,
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp),
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Выбрать расклад")
+                        }
+                    }
+                }
+            }
+
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = "Популярные схемы",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.weight(1f),
+                    )
+                    TextButton(onClick = onOpenSpreads) {
+                        Text("Все расклады")
+                    }
+                }
+            }
+
+            item {
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    items(SpreadOption.featured, key = { it.apiValue }) { option ->
+                        SpreadCompactCard(
+                            option = option,
+                            onClick = { onOpenSpread(option) },
                         )
                     }
                 }
+            }
 
-                items(reading.orderedCards, key = { it.position }) { readingCard ->
-                    ReadingCardView(readingCard = readingCard)
-                }
-
+            state.latestReading?.let { reading ->
                 item {
                     Text(
-                        text = "Расклад сохранён в истории",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.fillMaxWidth(),
+                        text = "Последний расклад",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
                     )
                 }
-
                 item {
-                    OutlinedButton(
-                        onClick = viewModel::reset,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp),
+                    LatestReadingCard(
+                        reading = reading,
+                        onClick = { onOpenReading(reading.id) },
+                    )
+                }
+            }
+
+            item {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(20.dp),
+                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+                    border = BorderStroke(
+                        1.dp,
+                        MaterialTheme.colorScheme.outline.copy(alpha = 0.2f),
+                    ),
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp),
                     ) {
-                        Text("Новый расклад")
+                        Text(
+                            text = "Как задать вопрос",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                        Text(
+                            text = "Говорите о себе и своих чувствах. Чем конкретнее вопрос, тем яснее ответ карт.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
                     }
                 }
             }
@@ -267,58 +248,45 @@ fun HomeScreen(
 }
 
 @Composable
-private fun SpreadOptionCard(
-    option: SpreadOption,
-    selected: Boolean,
-    enabled: Boolean,
+private fun LatestReadingCard(
+    reading: ReadingDto,
     onClick: () -> Unit,
 ) {
     Surface(
         onClick = onClick,
-        enabled = enabled,
-        shape = RoundedCornerShape(18.dp),
-        color = if (selected) {
-            MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
-        } else {
-            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f)
-        },
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.55f),
         border = BorderStroke(
             1.dp,
-            if (selected) {
-                MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
-            } else {
-                MaterialTheme.colorScheme.outline.copy(alpha = 0.25f)
-            },
+            MaterialTheme.colorScheme.primary.copy(alpha = 0.18f),
         ),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 14.dp, vertical = 12.dp),
+            modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            RadioButton(
-                selected = selected,
-                onClick = null,
-                enabled = enabled,
-            )
-            Spacer(modifier = Modifier.width(10.dp))
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = option.title,
+                    text = reading.question,
                     style = MaterialTheme.typography.titleMedium,
-                    color = if (selected) {
-                        MaterialTheme.colorScheme.primary
-                    } else {
-                        MaterialTheme.colorScheme.onSurface
-                    },
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
                 )
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = option.description,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    text = "${reading.spreadLabel} · ${formatReadingDate(reading.createdAt)}",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.secondary,
                 )
             }
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "→",
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.primary,
+            )
         }
     }
 }

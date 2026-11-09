@@ -1,12 +1,21 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Literal
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, computed_field
 
 from app.core.spreads import SPREAD_LABELS
+
+
+class SpreadOut(BaseModel):
+    id: str
+    title: str
+    description: str
+    category: str
+    symbol: str
+    cards_count: int
+    positions: list[str]
 
 
 class TarotCardOut(BaseModel):
@@ -52,4 +61,4 @@ class ReadingOut(BaseModel):
 
 class DrawRequest(BaseModel):
     question: str = Field(min_length=3, max_length=500)
-    spread: Literal["single", "three", "celtic"] = "three"
+    spread: str = Field(default="three", min_length=1, max_length=32)

@@ -8,20 +8,25 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.tarot.data.TarotRepository
-import com.example.tarot.ui.arcanika.ArcanikaScreen
+import com.example.tarot.domain.SpreadOption
 import com.example.tarot.ui.auth.AuthScreen
 import com.example.tarot.ui.history.HistoryScreen
 import com.example.tarot.ui.history.ReadingDetailScreen
 import com.example.tarot.ui.home.HomeScreen
+import com.example.tarot.ui.reading.ReadingScreen
+import com.example.tarot.ui.spreads.SpreadsScreen
 
 object Routes {
     const val AUTH = "auth"
     const val HOME = "home"
+    const val SPREADS = "spreads"
     const val HISTORY = "history"
     const val READING = "reading/{readingId}"
-    const val ARCANIKA = "arcanika"
+    const val NEW_READING = "new-reading/{spreadId}"
 
     fun reading(readingId: String): String = "reading/$readingId"
+
+    fun newReading(spread: SpreadOption): String = "new-reading/${spread.apiValue}"
 }
 
 @Composable
@@ -46,7 +51,6 @@ fun AppNavHost(
                         launchSingleTop = true
                     }
                 },
-                onOpenArcanika = { navController.navigate(Routes.ARCANIKA) },
             )
         }
 
@@ -60,7 +64,21 @@ fun AppNavHost(
                         launchSingleTop = true
                     }
                 },
-                onOpenArcanika = { navController.navigate(Routes.ARCANIKA) },
+                onOpenSpreads = { navController.navigate(Routes.SPREADS) },
+                onOpenSpread = { spread ->
+                    navController.navigate(Routes.newReading(spread))
+                },
+                onOpenReading = { readingId ->
+                    navController.navigate(Routes.reading(readingId))
+                },
+            )
+        }
+
+        composable(Routes.SPREADS) {
+            SpreadsScreen(
+                onOpenSpread = { spread ->
+                    navController.navigate(Routes.newReading(spread))
+                },
             )
         }
 
@@ -73,8 +91,18 @@ fun AppNavHost(
             )
         }
 
-        composable(Routes.ARCANIKA) {
-            ArcanikaScreen(onBack = { navController.popBackStack() })
+        composable(
+            route = Routes.NEW_READING,
+            arguments = listOf(navArgument("spreadId") { type = NavType.StringType }),
+        ) { backStackEntry ->
+            val spread = SpreadOption.fromApiValue(
+                backStackEntry.arguments?.getString("spreadId").orEmpty(),
+            )
+            ReadingScreen(
+                repository = repository,
+                spread = spread,
+                onBack = { navController.popBackStack() },
+            )
         }
 
         composable(

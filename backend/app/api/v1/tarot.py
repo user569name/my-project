@@ -7,13 +7,30 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_user
+from app.core.spreads import SPREAD_CATALOG
 from app.db.models.tarot import TarotCard
 from app.db.models.user import User
 from app.db.session import get_db
-from app.schemas.tarot import DrawRequest, ReadingOut, TarotCardOut
+from app.schemas.tarot import DrawRequest, ReadingOut, SpreadOut, TarotCardOut
 from app.services.tarot import draw_reading, get_reading, list_readings
 
 router = APIRouter()
+
+
+@router.get("/spreads", response_model=list[SpreadOut])
+async def spreads() -> list[SpreadOut]:
+    return [
+        SpreadOut(
+            id=spread.id,
+            title=spread.title,
+            description=spread.description,
+            category=spread.category,
+            symbol=spread.symbol,
+            cards_count=len(spread.positions),
+            positions=list(spread.positions),
+        )
+        for spread in SPREAD_CATALOG
+    ]
 
 
 @router.get("/cards", response_model=list[TarotCardOut])

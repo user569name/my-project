@@ -34,9 +34,24 @@ async def test_draw_single(client, auth_headers):
     assert body["cards"][0]["card"]["name_ru"]
 
 
+async def test_spread_catalog(client):
+    response = await client.get("/api/v1/tarot/spreads")
+    assert response.status_code == 200
+    spreads = response.json()
+    ids = {spread["id"] for spread in spreads}
+    assert len(spreads) == 12
+    assert {"single", "three", "celtic", "bridge", "career", "yesno"} <= ids
+
+    bridge = next(spread for spread in spreads if spread["id"] == "bridge")
+    assert bridge["title"] == "Мост между вами"
+    assert bridge["cards_count"] == 6
+    assert bridge["positions"][0] == "Вы"
+    assert bridge["category"] == "love"
+
+
 @pytest.mark.parametrize(
     ("spread", "count"),
-    [("three", 3), ("celtic", 10)],
+    [("three", 3), ("celtic", 10), ("bridge", 6), ("choice", 5), ("month", 4)],
 )
 async def test_draw_spreads(client, auth_headers, spread, count):
     response = await client.post(

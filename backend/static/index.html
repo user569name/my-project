@@ -189,9 +189,7 @@
 
       <div style="margin-top:14px;font-size:14px;color:var(--text-dim)">Выберите расклад</div>
       <div class="spread" id="spreads">
-        <label class="radio" data-v="single"><span class="dot"></span><span><b>Одна карта</b><small>Быстрый ответ на один вопрос</small></span></label>
-        <label class="radio" data-v="three"><span class="dot"></span><span><b>Три карты</b><small>Прошлое, настоящее и будущее</small></span></label>
-        <label class="radio" data-v="celtic"><span class="dot"></span><span><b>Кельтский крест</b><small>Глубокий разбор ситуации из 10 карт</small></span></label>
+        <div class="hint">Загружаем каталог раскладов...</div>
       </div>
       <button id="btn-draw" class="btn-main" type="button">★ Открыть карты</button>
       <div class="error" id="draw-error"></div>
@@ -212,7 +210,7 @@
   "use strict";
   const $ = (id) => document.getElementById(id);
   const TOKEN_KEY = "tarot_token";
-  const SPREAD_LABELS = { single: "Одна карта", three: "Три карты", celtic: "Кельтский крест" };
+  let SPREAD_LABELS = {};
   let token = localStorage.getItem(TOKEN_KEY) || "";
   let me = null;
   let chosenSpread = "three";
@@ -304,7 +302,39 @@
     $("view-main").classList.remove("hidden");
     $("who-name").textContent = me.display_name;
     $("hello").textContent = "Привет, " + me.display_name;
+    if (!Object.keys(SPREAD_LABELS).length) loadSpreads();
     loadHistory();
+  }
+
+  function cardsLabel(count) {
+    const mod10 = count % 10;
+    const mod100 = count % 100;
+    let word = "карт";
+    if (mod10 === 1 && mod100 !== 11) word = "карта";
+    else if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) word = "карты";
+    return count + " " + word;
+  }
+
+  // каталог раскладов
+  async function loadSpreads() {
+    const box = $("spreads");
+    try {
+      const items = await api("/tarot/spreads");
+      SPREAD_LABELS = {};
+      box.innerHTML = items.map((s) =>
+        '<label class="radio" data-v="' + escapeHtml(s.id) + '">' +
+          '<span class="dot"></span>' +
+          '<span><b>' + escapeHtml(s.title) + '</b>' +
+          '<small>' + escapeHtml(s.description) + ' · ' + cardsLabel(s.cards_count) + '</small></span>' +
+        '</label>').join("");
+      if (!items.some((s) => s.id === chosenSpread)) {
+        chosenSpread = items.some((s) => s.id === "three") ? "three" : (items[0] ? items[0].id : "three");
+      }
+      items.forEach((s) => { SPREAD_LABELS[s.id] = s.title; });
+      renderSpread();
+    } catch (e) {
+      box.innerHTML = '<div class="hint">Не удалось загрузить каталог раскладов. Проверьте соединение с сервером.</div>';
+    }
   }
 
   // выбор расклада
@@ -314,7 +344,7 @@
       el.onclick = () => { chosenSpread = el.dataset.v; renderSpread(); };
     });
   }
-  renderSpread();
+  loadSpreads();
 
   $("f-question").addEventListener("input", () => { $("q-count").textContent = String($("f-question").value.length); });
 
@@ -340,7 +370,7 @@
   function showReading(r, scroll) {
     const box = $("result-box");
     const cols = r.cards.length === 1 ? "c1" : r.cards.length === 3 ? "c3" : "c10";
-    const compact = r.cards.length === 10;
+    const compact = r.cards.length >= 6;
     box.innerHTML =
       '<div class="panel">' +
         '<button class="back hidden" id="btn-back">← Назад к раскладам</button>' +

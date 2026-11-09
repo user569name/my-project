@@ -5,8 +5,9 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -39,7 +40,9 @@ fun AppRoot() {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
 
-    val showBottomBar = currentRoute == Routes.HOME || currentRoute == Routes.HISTORY
+    val showBottomBar = currentRoute == Routes.HOME ||
+        currentRoute == Routes.SPREADS ||
+        currentRoute == Routes.HISTORY
 
     MysticBackground {
         Scaffold(
@@ -51,7 +54,7 @@ fun AppRoot() {
                     NavigationBar(containerColor = DeepSurface) {
                         BottomBarItem(
                             selected = currentRoute == Routes.HOME,
-                            label = "Гадание",
+                            label = "Главная",
                             icon = {
                                 Icon(
                                     imageVector = Icons.Default.Home,
@@ -61,11 +64,22 @@ fun AppRoot() {
                             onClick = { navigateToTab(navController, Routes.HOME) },
                         )
                         BottomBarItem(
+                            selected = currentRoute == Routes.SPREADS,
+                            label = "Расклады",
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Default.Star,
+                                    contentDescription = null,
+                                )
+                            },
+                            onClick = { navigateToTab(navController, Routes.SPREADS) },
+                        )
+                        BottomBarItem(
                             selected = currentRoute == Routes.HISTORY,
                             label = "История",
                             icon = {
                                 Icon(
-                                    imageVector = Icons.Default.List,
+                                    imageVector = Icons.AutoMirrored.Filled.List,
                                     contentDescription = null,
                                 )
                             },
