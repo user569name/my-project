@@ -9,7 +9,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.tarot.data.TarotRepository
 import com.example.tarot.domain.SpreadOption
-import com.example.tarot.ui.auth.AuthScreen
 import com.example.tarot.ui.history.HistoryScreen
 import com.example.tarot.ui.history.ReadingDetailScreen
 import com.example.tarot.ui.home.HomeScreen
@@ -17,7 +16,6 @@ import com.example.tarot.ui.reading.ReadingScreen
 import com.example.tarot.ui.spreads.SpreadsScreen
 
 object Routes {
-    const val AUTH = "auth"
     const val HOME = "home"
     const val SPREADS = "spreads"
     const val HISTORY = "history"
@@ -35,35 +33,16 @@ fun AppNavHost(
     repository: TarotRepository,
     modifier: Modifier = Modifier,
 ) {
-    val startDestination = if (repository.isLoggedIn) Routes.HOME else Routes.AUTH
+    val startDestination = Routes.HOME
 
     NavHost(
         navController = navController,
         startDestination = startDestination,
         modifier = modifier,
     ) {
-        composable(Routes.AUTH) {
-            AuthScreen(
-                repository = repository,
-                onAuthenticated = {
-                    navController.navigate(Routes.HOME) {
-                        popUpTo(Routes.AUTH) { inclusive = true }
-                        launchSingleTop = true
-                    }
-                },
-            )
-        }
-
         composable(Routes.HOME) {
             HomeScreen(
                 repository = repository,
-                onLoggedOut = {
-                    repository.logout()
-                    navController.navigate(Routes.AUTH) {
-                        popUpTo(Routes.HOME) { inclusive = true }
-                        launchSingleTop = true
-                    }
-                },
                 onOpenSpreads = { navController.navigate(Routes.SPREADS) },
                 onOpenSpread = { spread ->
                     navController.navigate(Routes.newReading(spread))

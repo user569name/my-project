@@ -15,7 +15,6 @@
     --text: #efe9dc;
     --text-dim: #9b93ab;
     --danger: #d98a8a;
-    --ok: #9ecf9e;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -36,32 +35,34 @@
       radial-gradient(1px 1px at 90% 25%, rgba(255,255,255,.2) 50%, transparent 51%),
       radial-gradient(1px 1px at 10% 55%, rgba(255,255,255,.25) 50%, transparent 51%);
   }
+  header.bar {
+    display: flex; justify-content: space-between; align-items: center; margin: 8px 0 4px;
+  }
+  header.bar .logo-small {
+    font-family: Georgia, serif; font-size: 22px; color: var(--gold-bright);
+  }
+  header.bar .who { color: var(--text-dim); font-size: 13px; }
+  .sparkle { text-align: center; font-size: 34px; margin-top: 22px; filter: drop-shadow(0 0 12px rgba(232,200,124,.6)); }
   h1.logo {
     font-family: Georgia, "Times New Roman", serif;
     text-align: center; font-size: 40px; font-weight: 500;
-    color: var(--gold-bright); letter-spacing: 0.5px; margin-top: 18px;
+    color: var(--gold-bright); letter-spacing: 0.5px; margin-top: 8px;
   }
   .tagline { text-align: center; color: var(--text-dim); margin: 6px 0 30px; }
-  .sparkle { text-align: center; font-size: 34px; margin-top: 22px; filter: drop-shadow(0 0 12px rgba(232,200,124,.6)); }
+  h2 { font-family: Georgia, serif; font-size: 26px; margin: 18px 0 4px; }
+  .sub { color: var(--text-dim); margin-bottom: 12px; }
   .panel {
     background: var(--bg-card); border: 1px solid var(--border);
     border-radius: 18px; padding: 20px; margin-bottom: 18px;
   }
-  .tabs { display: flex; gap: 10px; margin-bottom: 18px; }
-  .tabs button {
-    flex: 1; padding: 10px; border-radius: 999px; cursor: pointer;
-    border: 1px solid var(--border); background: transparent; color: var(--text-dim);
-    font-size: 15px; transition: all .15s;
-  }
-  .tabs button.active { background: rgba(216,180,106,.12); color: var(--gold-bright); }
   label { display: block; font-size: 13px; color: var(--text-dim); margin: 12px 2px 6px; }
-  input[type=text], input[type=email], input[type=password], textarea {
+  textarea {
     width: 100%; background: var(--bg); color: var(--text);
     border: 1px solid var(--border); border-radius: 12px;
     padding: 12px 14px; font-size: 15px; outline: none;
+    resize: vertical; min-height: 84px;
   }
-  input:focus, textarea:focus { border-color: var(--gold); }
-  textarea { resize: vertical; min-height: 84px; }
+  textarea:focus { border-color: var(--gold); }
   .hint { font-size: 12px; color: var(--text-dim); margin: 5px 4px; }
   .btn-main {
     width: 100%; margin-top: 16px; padding: 13px; font-size: 16px; font-weight: 600;
@@ -81,7 +82,6 @@
   }
   .spread label.radio:hover { border-color: var(--gold); }
   .spread label.radio.checked { background: rgba(216,180,106,.12); border-color: var(--gold); }
-  .spread input { display: none; }
   .dot {
     width: 20px; height: 20px; border-radius: 50%; flex: none;
     border: 2px solid var(--gold); position: relative;
@@ -91,17 +91,6 @@
   }
   .spread b { font-size: 15px; }
   .spread small { display: block; color: var(--text-dim); font-weight: 400; }
-  header.bar {
-    display: flex; justify-content: space-between; align-items: center; margin: 8px 0 4px;
-  }
-  header.bar .logo-small {
-    font-family: Georgia, serif; font-size: 22px; color: var(--gold-bright); text-decoration: none;
-  }
-  header.bar .who { color: var(--text-dim); font-size: 14px; display: flex; gap: 12px; align-items: center; }
-  .link { color: var(--text-dim); cursor: pointer; text-decoration: underline dotted; background: none; border: none; font: inherit; font-size: 14px; }
-  .link:hover { color: var(--gold); }
-  h2 { font-family: Georgia, serif; font-size: 26px; margin: 18px 0 4px; }
-  .sub { color: var(--text-dim); margin-bottom: 12px; }
   .cards { display: grid; gap: 12px; margin-top: 10px; }
   .cards.c1 { grid-template-columns: minmax(0, 1fr); }
   .cards.c3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -114,7 +103,6 @@
   .card .nm { font-family: Georgia, serif; margin-top: 6px; font-size: 14px; line-height: 1.25; }
   .card .pos { color: var(--text-dim); font-size: 11.5px; margin-top: 4px; }
   .card .rev { color: var(--danger); font-size: 11.5px; margin-top: 2px; }
-  .card.flipped { transform: rotate(0deg); }
   .card .mean { margin-top: 8px; font-size: 12.5px; color: var(--text); text-align: left; line-height: 1.45; }
   .card .kw { margin-top: 6px; font-size: 11px; color: var(--text-dim); }
   .reading-meta { color: var(--text-dim); font-size: 13px; margin: 4px 0 8px; }
@@ -128,182 +116,66 @@
   .history-item .who2 { font-family: Georgia, serif; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .history-item .when { color: var(--text-dim); font-size: 12px; flex: none; }
   .history-item small { color: var(--text-dim); }
-  .back { color: var(--gold); cursor: pointer; background: none; border: none; font: inherit; margin-bottom: 8px; }
-  .hidden { display: none !important; }
   .badge {
     display: inline-block; border: 1px solid var(--border); color: var(--gold);
     border-radius: 999px; font-size: 12px; padding: 2px 10px; margin-left: 8px; vertical-align: middle;
   }
   footer { text-align: center; color: var(--text-dim); font-size: 12px; margin-top: 40px; }
-  .spin {
-    margin: 30px auto; width: 34px; height: 34px; border-radius: 50%;
-    border: 3px solid var(--border); border-top-color: var(--gold);
-    animation: spin 0.9s linear infinite;
+  @media (max-width: 560px) {
+    .cards.c3 { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; }
+    h1.logo { font-size: 32px; }
   }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @media (max-width: 560px) { .cards.c3 { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; } h1.logo { font-size: 32px; } }
 </style>
 </head>
 <body class="starfield">
 <div class="wrap" id="app">
 
-  <!-- ======== Экран авторизации ======== -->
-  <div id="view-auth">
-    <div class="sparkle">✦</div>
-    <h1 class="logo">Mystic Tarot</h1>
-    <p class="tagline">Карты знают больше, чем кажется</p>
-    <div class="panel" style="max-width:440px;margin:0 auto;">
-      <div class="tabs">
-        <button id="tab-login" class="active" type="button">Вход</button>
-        <button id="tab-register" type="button">Регистрация</button>
-      </div>
-      <div id="reg-name-wrap" class="hidden">
-        <label for="f-name">Как вас зовут?</label>
-        <input id="f-name" type="text" maxlength="60" placeholder="Имя или псевдоним">
-      </div>
-      <label for="f-email">Email</label>
-      <input id="f-email" type="email" autocomplete="username" placeholder="you@example.com">
-      <label for="f-pass">Пароль</label>
-      <input id="f-pass" type="password" autocomplete="current-password" placeholder="••••••••">
-      <div class="hint" id="pass-hint">Минимум 8 символов</div>
-      <button id="btn-auth" class="btn-main" type="button">Войти</button>
-      <div class="error" id="auth-error"></div>
-    </div>
-    <p class="tagline" style="margin-top:22px">Ваши расклады сохраняются только в вашем аккаунте</p>
+  <header class="bar">
+    <span class="logo-small">Mystic Tarot</span>
+    <span class="who">локальные расклады</span>
+  </header>
+
+  <div class="sparkle">✦</div>
+  <h1 class="logo">Mystic Tarot</h1>
+  <p class="tagline">Карты знают больше, чем кажется</p>
+
+  <h2>Привет, путник</h2>
+  <p class="sub">Сформулируйте вопрос — и позвольте картам ответить.</p>
+
+  <div class="panel">
+    <label for="f-question">Ваш вопрос</label>
+    <textarea id="f-question" maxlength="500" placeholder="О чём вы хотите спросить карты?"></textarea>
+    <div class="hint"><span id="q-count">0</span>/500</div>
+
+    <div style="margin-top:14px;font-size:14px;color:var(--text-dim)">Выберите расклад</div>
+    <div class="spread" id="spreads"></div>
+    <button id="btn-draw" class="btn-main" type="button">★ Открыть карты</button>
+    <div class="error" id="draw-error"></div>
   </div>
 
-  <!-- ======== Основной экран ======== -->
-  <div id="view-main" class="hidden">
-    <header class="bar">
-      <span class="logo-small">Mystic Tarot</span>
-      <span class="who"><span id="who-name"></span><button class="link" id="btn-logout" type="button">Выйти</button></span>
-    </header>
+  <div id="result-box"></div>
 
-    <h2 id="hello"></h2>
-    <p class="sub">Сформулируйте вопрос — и позвольте картам ответить.</p>
+  <h2>История</h2>
+  <p class="sub">Расклады хранятся в этом браузере</p>
+  <div id="history"></div>
 
-    <div class="panel">
-      <label for="f-question">Ваш вопрос</label>
-      <textarea id="f-question" maxlength="500" placeholder="О чём вы хотите спросить карты?"></textarea>
-      <div class="hint"><span id="q-count">0</span>/500</div>
-
-      <div style="margin-top:14px;font-size:14px;color:var(--text-dim)">Выберите расклад</div>
-      <div class="spread" id="spreads">
-        <div class="hint">Загружаем каталог раскладов...</div>
-      </div>
-      <button id="btn-draw" class="btn-main" type="button">★ Открыть карты</button>
-      <div class="error" id="draw-error"></div>
-    </div>
-
-    <div id="result-box"></div>
-
-    <h2>История</h2>
-    <p class="sub">Последние расклады вашего аккаунта</p>
-    <div id="history"></div>
-  </div>
-
-  <footer>Mystic Tarot API v1 · расклады носят развлекательный характер</footer>
+  <footer>Mystic Tarot · расклады носят развлекательный характер</footer>
 </div>
 
 <script>
 (function () {
   "use strict";
+  const SPREADS = [{"id":"single","title":"Одна карта","description":"Короткий и ясный ответ на один конкретный вопрос.","positions":["Ответ"]},{"id":"three","title":"Три карты","description":"Как ситуация развивалась, где вы сейчас и что ждёт впереди.","positions":["Прошлое","Настоящее","Будущее"]},{"id":"celtic","title":"Кельтский крест","description":"Объёмный разбор: причины, препятствия, скрытые мотивы и итог.","positions":["Суть ситуации","Вызов","Прошлое","Будущее","Сознание","Подсознание","Совет","Влияние извне","Надежды и страхи","Итог"]},{"id":"horseshoe","title":"Подкова","description":"Семь карт о препятствиях, поддержке и вероятном исходе.","positions":["Прошлое","Настоящее","Скрытые влияния","Препятствие","Окружение","Совет","Итог"]},{"id":"choice","title":"Перекрёсток","description":"Сравните два варианта и поймите, какой путь ближе вам.","positions":["Суть выбора","Путь А","Путь Б","Что поможет","Итог"]},{"id":"yesno","title":"Да или нет","description":"Быстрое решение: аргументы за, аргументы против и совет карт.","positions":["За","Против","Совет"]},{"id":"bridge","title":"Мост между вами","description":"О чувствах, дистанции и том, что поможет сблизиться.","positions":["Вы","Партнёр","Что между вами","Что мешает","Что сблизит","Перспектива"]},{"id":"spark","title":"Искра","description":"О зарождающейся симпатии и о том, куда она может привести.","positions":["Ваши чувства","Чувства другого","Что притягивает","Что настораживает","Куда ведёт"]},{"id":"career","title":"Карьерный компас","description":"Сильные стороны, скрытые возможности и следующий шаг в работе.","positions":["Текущая ситуация","Сильные стороны","Скрытая возможность","Препятствие","Следующий шаг","Результат"]},{"id":"money","title":"Денежный поток","description":"Откуда приходят деньги, куда уходят и где точка роста.","positions":["Сейчас","Что привлекает доход","Куда утекает","Что изменить","Перспектива"]},{"id":"month","title":"Лунный месяц","description":"Прогноз на ближайший месяц: начало, середина, завершение и совет.","positions":["Начало","Середина","Завершение","Совет"]},{"id":"open","title":"Открытая книга","description":"Что скрыто в ситуации и какой шаг прояснит её.","positions":["Что скрыто","Что важно знать","Что делать","Итог"]}];
+  const CARDS = [{"id":1,"slug":"the-fool","name":"The Fool","name_ru":"Шут","arcana":"major","suit":null,"number":0,"symbol":"0","keywords_upright":["начало","спонтанность","свобода"],"keywords_reversed":["безрассудство","страх","наивность"],"meaning_upright":"Чистый лист и прыжок в неизвестность. Вселенная поддерживает смелые начинания, если вы готовы рискнуть.","meaning_reversed":"Страх сделать первый шаг или чрезмерная импульсивность. Сначала стоит оценить риски."},{"id":2,"slug":"the-magician","name":"The Magician","name_ru":"Маг","arcana":"major","suit":null,"number":1,"symbol":"I","keywords_upright":["воля","мастерство","проявление"],"keywords_reversed":["манипуляция","сомнение","блок"],"meaning_upright":"У вас есть всё необходимое, чтобы воплотить замысел. Время действовать осознанно и использовать свои навыки.","meaning_reversed":"Манипуляции, сомнение в себе или распыление сил. Проверьте, не обманываете ли вы сами себя."},{"id":23,"slug":"ace-of-wands","name":"Ace of Wands","name_ru":"Туз Жезлов","arcana":"minor","suit":"wands","number":1,"symbol":"🪄","keywords_upright":["искра","потенциал","энергия","действие"],"keywords_reversed":["блок","задержка","энергия","действие"],"meaning_upright":"Туз — это искра потенциала и начало нового. Стихия Огня добавляет энергии, смелости и желания действовать.","meaning_reversed":"Перевёрнутый Туз — потенциал заблокирован или ещё не нашёл выхода. Тень Огня — импульсивность, выгорание и борьба за внимание."},{"id":37,"slug":"ace-of-cups","name":"Ace of Cups","name_ru":"Туз Кубков","arcana":"minor","suit":"cups","number":1,"symbol":"🏆","keywords_upright":["искра","потенциал","чувства","отношения"],"keywords_reversed":["блок","задержка","чувства","отношения"],"meaning_upright":"Туз — это искра потенциала и начало нового. Стихия Воды говорит о чувствах, отношениях и движении души.","meaning_reversed":"Перевёрнутый Туз — потенциал заблокирован или ещё не нашёл выхода. Тень Воды — эмоциональная зависимость, обиды и иллюзии."},{"id":51,"slug":"ace-of-swords","name":"Ace of Swords","name_ru":"Туз Мечей","arcana":"minor","suit":"swords","number":1,"symbol":"⚔️","keywords_upright":["искра","потенциал","мысли","истина"],"keywords_reversed":["блок","задержка","мысли","истина"],"meaning_upright":"Туз — это искра потенциала и начало нового. Стихия Воздуха проясняет мысли, слова и правду.","meaning_reversed":"Перевёрнутый Туз — потенциал заблокирован или ещё не нашёл выхода. Тень Воздуха — тревожные мысли, конфликты и чрезмерная жёсткость."},{"id":65,"slug":"ace-of-pentacles","name":"Ace of Pentacles","name_ru":"Туз Пентаклей","arcana":"minor","suit":"pentacles","number":1,"symbol":"🪙","keywords_upright":["искра","потенциал","деньги","стабильность"],"keywords_reversed":["блок","задержка","деньги","стабильность"],"meaning_upright":"Туз — это искра потенциала и начало нового. Стихия Земли отвечает за деньги, работу, тело и устойчивость.","meaning_reversed":"Перевёрнутый Туз — потенциал заблокирован или ещё не нашёл выхода. Тень Земли — жадность, застой и страх потерять накопленное."},{"id":3,"slug":"the-high-priestess","name":"The High Priestess","name_ru":"Верховная Жрица","arcana":"major","suit":null,"number":2,"symbol":"II","keywords_upright":["интуиция","тайна","внутренний голос"],"keywords_reversed":["игнорирование интуиции","секреты"],"meaning_upright":"Ответ приходит изнутри. Доверьтесь интуиции и обратите внимание на знаки и сны.","meaning_reversed":"Вы заглушаете внутренний голос и игнорируете важные сигналы. Нужна тишина и честность с собой."},{"id":24,"slug":"two-of-wands","name":"Two of Wands","name_ru":"Двойка Жезлов","arcana":"minor","suit":"wands","number":2,"symbol":"🪄","keywords_upright":["выбор","партнёрство","энергия","действие"],"keywords_reversed":["блок","задержка","энергия","действие"],"meaning_upright":"Двойка говорит о выборе, партнёрстве и поиске баланса. Стихия Огня добавляет энергии, смелости и желания действовать.","meaning_reversed":"Перевёрнутая Двойка — дисбаланс, нерешительность или неравный союз. Тень Огня — импульсивность, выгорание и борьба за внимание."},{"id":38,"slug":"two-of-cups","name":"Two of Cups","name_ru":"Двойка Кубков","arcana":"minor","suit":"cups","number":2,"symbol":"🏆","keywords_upright":["выбор","партнёрство","чувства","отношения"],"keywords_reversed":["блок","задержка","чувства","отношения"],"meaning_upright":"Двойка говорит о выборе, партнёрстве и поиске баланса. Стихия Воды говорит о чувствах, отношениях и движении души.","meaning_reversed":"Перевёрнутая Двойка — дисбаланс, нерешительность или неравный союз. Тень Воды — эмоциональная зависимость, обиды и иллюзии."},{"id":52,"slug":"two-of-swords","name":"Two of Swords","name_ru":"Двойка Мечей","arcana":"minor","suit":"swords","number":2,"symbol":"⚔️","keywords_upright":["выбор","партнёрство","мысли","истина"],"keywords_reversed":["блок","задержка","мысли","истина"],"meaning_upright":"Двойка говорит о выборе, партнёрстве и поиске баланса. Стихия Воздуха проясняет мысли, слова и правду.","meaning_reversed":"Перевёрнутая Двойка — дисбаланс, нерешительность или неравный союз. Тень Воздуха — тревожные мысли, конфликты и чрезмерная жёсткость."},{"id":66,"slug":"two-of-pentacles","name":"Two of Pentacles","name_ru":"Двойка Пентаклей","arcana":"minor","suit":"pentacles","number":2,"symbol":"🪙","keywords_upright":["выбор","партнёрство","деньги","стабильность"],"keywords_reversed":["блок","задержка","деньги","стабильность"],"meaning_upright":"Двойка говорит о выборе, партнёрстве и поиске баланса. Стихия Земли отвечает за деньги, работу, тело и устойчивость.","meaning_reversed":"Перевёрнутая Двойка — дисбаланс, нерешительность или неравный союз. Тень Земли — жадность, застой и страх потерять накопленное."},{"id":4,"slug":"the-empress","name":"The Empress","name_ru":"Императрица","arcana":"major","suit":null,"number":3,"symbol":"III","keywords_upright":["изобилие","забота","рост"],"keywords_reversed":["застой","истощение","зависимость"],"meaning_upright":"Период роста, заботы и изобилия. То, что вы взращиваете, начинает приносить плоды.","meaning_reversed":"Застой или истощение из-за заботы о других в ущерб себе. Верните внимание собственным потребностям."},{"id":25,"slug":"three-of-wands","name":"Three of Wands","name_ru":"Тройка Жезлов","arcana":"minor","suit":"wands","number":3,"symbol":"🪄","keywords_upright":["рост","сотрудничество","энергия","действие"],"keywords_reversed":["блок","задержка","энергия","действие"],"meaning_upright":"Тройка приносит рост, сотрудничество и первые результаты. Стихия Огня добавляет энергии, смелости и желания действовать.","meaning_reversed":"Перевёрнутая Тройка — задержка, разлад в команде или нехватка поддержки. Тень Огня — импульсивность, выгорание и борьба за внимание."},{"id":39,"slug":"three-of-cups","name":"Three of Cups","name_ru":"Тройка Кубков","arcana":"minor","suit":"cups","number":3,"symbol":"🏆","keywords_upright":["рост","сотрудничество","чувства","отношения"],"keywords_reversed":["блок","задержка","чувства","отношения"],"meaning_upright":"Тройка приносит рост, сотрудничество и первые результаты. Стихия Воды говорит о чувствах, отношениях и движении души.","meaning_reversed":"Перевёрнутая Тройка — задержка, разлад в команде или нехватка поддержки. Тень Воды — эмоциональная зависимость, обиды и иллюзии."},{"id":53,"slug":"three-of-swords","name":"Three of Swords","name_ru":"Тройка Мечей","arcana":"minor","suit":"swords","number":3,"symbol":"⚔️","keywords_upright":["рост","сотрудничество","мысли","истина"],"keywords_reversed":["блок","задержка","мысли","истина"],"meaning_upright":"Тройка приносит рост, сотрудничество и первые результаты. Стихия Воздуха проясняет мысли, слова и правду.","meaning_reversed":"Перевёрнутая Тройка — задержка, разлад в команде или нехватка поддержки. Тень Воздуха — тревожные мысли, конфликты и чрезмерная жёсткость."},{"id":67,"slug":"three-of-pentacles","name":"Three of Pentacles","name_ru":"Тройка Пентаклей","arcana":"minor","suit":"pentacles","number":3,"symbol":"🪙","keywords_upright":["рост","сотрудничество","деньги","стабильность"],"keywords_reversed":["блок","задержка","деньги","стабильность"],"meaning_upright":"Тройка приносит рост, сотрудничество и первые результаты. Стихия Земли отвечает за деньги, работу, тело и устойчивость.","meaning_reversed":"Перевёрнутая Тройка — задержка, разлад в команде или нехватка поддержки. Тень Земли — жадность, застой и страх потерять накопленное."},{"id":5,"slug":"the-emperor","name":"The Emperor","name_ru":"Император","arcana":"major","suit":null,"number":4,"symbol":"IV","keywords_upright":["стабильность","структура","власть"],"keywords_reversed":["контроль","жёсткость","упрямство"],"meaning_upright":"Стабильность и порядок. Сейчас помогают дисциплина, границы и ясная структура.","meaning_reversed":"Жёсткость и контроль вредят. Иногда стоит ослабить хватку и прислушаться к другим."},{"id":26,"slug":"four-of-wands","name":"Four of Wands","name_ru":"Четвёрка Жезлов","arcana":"minor","suit":"wands","number":4,"symbol":"🪄","keywords_upright":["стабильность","пауза","энергия","действие"],"keywords_reversed":["блок","задержка","энергия","действие"],"meaning_upright":"Четвёрка говорит о стабильности, отдыхе и сохранении достигнутого. Стихия Огня добавляет энергии, смелости и желания действовать.","meaning_reversed":"Перевёрнутая Четвёрка — застой, скука или сопротивление паузе. Тень Огня — импульсивность, выгорание и борьба за внимание."},{"id":40,"slug":"four-of-cups","name":"Four of Cups","name_ru":"Четвёрка Кубков","arcana":"minor","suit":"cups","number":4,"symbol":"🏆","keywords_upright":["стабильность","пауза","чувства","отношения"],"keywords_reversed":["блок","задержка","чувства","отношения"],"meaning_upright":"Четвёрка говорит о стабильности, отдыхе и сохранении достигнутого. Стихия Воды говорит о чувствах, отношениях и движении души.","meaning_reversed":"Перевёрнутая Четвёрка — застой, скука или сопротивление паузе. Тень Воды — эмоциональная зависимость, обиды и иллюзии."},{"id":54,"slug":"four-of-swords","name":"Four of Swords","name_ru":"Четвёрка Мечей","arcana":"minor","suit":"swords","number":4,"symbol":"⚔️","keywords_upright":["стабильность","пауза","мысли","истина"],"keywords_reversed":["блок","задержка","мысли","истина"],"meaning_upright":"Четвёрка говорит о стабильности, отдыхе и сохранении достигнутого. Стихия Воздуха проясняет мысли, слова и правду.","meaning_reversed":"Перевёрнутая Четвёрка — застой, скука или сопротивление паузе. Тень Воздуха — тревожные мысли, конфликты и чрезмерная жёсткость."},{"id":68,"slug":"four-of-pentacles","name":"Four of Pentacles","name_ru":"Четвёрка Пентаклей","arcana":"minor","suit":"pentacles","number":4,"symbol":"🪙","keywords_upright":["стабильность","пауза","деньги","стабильность"],"keywords_reversed":["блок","задержка","деньги","стабильность"],"meaning_upright":"Четвёрка говорит о стабильности, отдыхе и сохранении достигнутого. Стихия Земли отвечает за деньги, работу, тело и устойчивость.","meaning_reversed":"Перевёрнутая Четвёрка — застой, скука или сопротивление паузе. Тень Земли — жадность, застой и страх потерять накопленное."},{"id":6,"slug":"the-hierophant","name":"The Hierophant","name_ru":"Иерофант","arcana":"major","suit":null,"number":5,"symbol":"V","keywords_upright":["традиции","наставничество","правила"],"keywords_reversed":["догмы","бунт","формализм"],"meaning_upright":"Традиции и наставничество. Опора на проверенные знания и мудрость старших принесёт пользу.","meaning_reversed":"Догмы мешают развитию. Возможно, пришло время пересмотреть правила и найти свой путь."},{"id":27,"slug":"five-of-wands","name":"Five of Wands","name_ru":"Пятёрка Жезлов","arcana":"minor","suit":"wands","number":5,"symbol":"🪄","keywords_upright":["конфликт","перемены","энергия","действие"],"keywords_reversed":["блок","задержка","энергия","действие"],"meaning_upright":"Пятёрка приносит конфликт, потери и необходимость перемен. Стихия Огня добавляет энергии, смелости и желания действовать.","meaning_reversed":"Перевёрнутая Пятёрка — выход из кризиса, примирение или урок, который пора отпустить. Тень Огня — импульсивность, выгорание и борьба за внимание."},{"id":41,"slug":"five-of-cups","name":"Five of Cups","name_ru":"Пятёрка Кубков","arcana":"minor","suit":"cups","number":5,"symbol":"🏆","keywords_upright":["конфликт","перемены","чувства","отношения"],"keywords_reversed":["блок","задержка","чувства","отношения"],"meaning_upright":"Пятёрка приносит конфликт, потери и необходимость перемен. Стихия Воды говорит о чувствах, отношениях и движении души.","meaning_reversed":"Перевёрнутая Пятёрка — выход из кризиса, примирение или урок, который пора отпустить. Тень Воды — эмоциональная зависимость, обиды и иллюзии."},{"id":55,"slug":"five-of-swords","name":"Five of Swords","name_ru":"Пятёрка Мечей","arcana":"minor","suit":"swords","number":5,"symbol":"⚔️","keywords_upright":["конфликт","перемены","мысли","истина"],"keywords_reversed":["блок","задержка","мысли","истина"],"meaning_upright":"Пятёрка приносит конфликт, потери и необходимость перемен. Стихия Воздуха проясняет мысли, слова и правду.","meaning_reversed":"Перевёрнутая Пятёрка — выход из кризиса, примирение или урок, который пора отпустить. Тень Воздуха — тревожные мысли, конфликты и чрезмерная жёсткость."},{"id":69,"slug":"five-of-pentacles","name":"Five of Pentacles","name_ru":"Пятёрка Пентаклей","arcana":"minor","suit":"pentacles","number":5,"symbol":"🪙","keywords_upright":["конфликт","перемены","деньги","стабильность"],"keywords_reversed":["блок","задержка","деньги","стабильность"],"meaning_upright":"Пятёрка приносит конфликт, потери и необходимость перемен. Стихия Земли отвечает за деньги, работу, тело и устойчивость.","meaning_reversed":"Перевёрнутая Пятёрка — выход из кризиса, примирение или урок, который пора отпустить. Тень Земли — жадность, застой и страх потерять накопленное."},{"id":7,"slug":"the-lovers","name":"The Lovers","name_ru":"Влюблённые","arcana":"major","suit":null,"number":6,"symbol":"VI","keywords_upright":["выбор","союз","ценности"],"keywords_reversed":["дисбаланс","сомнения","разлад"],"meaning_upright":"Важный выбор сердцем. Речь о ценностях, союзе и честности с собой.","meaning_reversed":"Дисбаланс в отношениях или сомнения. Не принимайте решение под давлением."},{"id":28,"slug":"six-of-wands","name":"Six of Wands","name_ru":"Шестёрка Жезлов","arcana":"minor","suit":"wands","number":6,"symbol":"🪄","keywords_upright":["гармония","движение","энергия","действие"],"keywords_reversed":["блок","задержка","энергия","действие"],"meaning_upright":"Шестёрка приносит гармонию, помощь и движение вперёд. Стихия Огня добавляет энергии, смелости и желания действовать.","meaning_reversed":"Перевёрнутая Шестёрка — задержка в пути, долги или нежелание принять помощь. Тень Огня — импульсивность, выгорание и борьба за внимание."},{"id":42,"slug":"six-of-cups","name":"Six of Cups","name_ru":"Шестёрка Кубков","arcana":"minor","suit":"cups","number":6,"symbol":"🏆","keywords_upright":["гармония","движение","чувства","отношения"],"keywords_reversed":["блок","задержка","чувства","отношения"],"meaning_upright":"Шестёрка приносит гармонию, помощь и движение вперёд. Стихия Воды говорит о чувствах, отношениях и движении души.","meaning_reversed":"Перевёрнутая Шестёрка — задержка в пути, долги или нежелание принять помощь. Тень Воды — эмоциональная зависимость, обиды и иллюзии."},{"id":56,"slug":"six-of-swords","name":"Six of Swords","name_ru":"Шестёрка Мечей","arcana":"minor","suit":"swords","number":6,"symbol":"⚔️","keywords_upright":["гармония","движение","мысли","истина"],"keywords_reversed":["блок","задержка","мысли","истина"],"meaning_upright":"Шестёрка приносит гармонию, помощь и движение вперёд. Стихия Воздуха проясняет мысли, слова и правду.","meaning_reversed":"Перевёрнутая Шестёрка — задержка в пути, долги или нежелание принять помощь. Тень Воздуха — тревожные мысли, конфликты и чрезмерная жёсткость."},{"id":70,"slug":"six-of-pentacles","name":"Six of Pentacles","name_ru":"Шестёрка Пентаклей","arcana":"minor","suit":"pentacles","number":6,"symbol":"🪙","keywords_upright":["гармония","движение","деньги","стабильность"],"keywords_reversed":["блок","задержка","деньги","стабильность"],"meaning_upright":"Шестёрка приносит гармонию, помощь и движение вперёд. Стихия Земли отвечает за деньги, работу, тело и устойчивость.","meaning_reversed":"Перевёрнутая Шестёрка — задержка в пути, долги или нежелание принять помощь. Тень Земли — жадность, застой и страх потерять накопленное."},{"id":8,"slug":"the-chariot","name":"The Chariot","name_ru":"Колесница","arcana":"major","suit":null,"number":7,"symbol":"VII","keywords_upright":["победа","воля","движение"],"keywords_reversed":["потеря контроля","препятствия"],"meaning_upright":"Победа через волю и концентрацию. Двигайтесь к цели, не сворачивая.","meaning_reversed":"Потеря управления и внутренние конфликты. Сначала восстановите ясность и направление."},{"id":29,"slug":"seven-of-wands","name":"Seven of Wands","name_ru":"Семёрка Жезлов","arcana":"minor","suit":"wands","number":7,"symbol":"🪄","keywords_upright":["испытание","выбор","энергия","действие"],"keywords_reversed":["блок","задержка","энергия","действие"],"meaning_upright":"Семёрка говорит об испытании, стратегии и необходимости выбрать. Стихия Огня добавляет энергии, смелости и желания действовать.","meaning_reversed":"Перевёрнутая Семёрка — самообман, слабая стратегия или страх сделать выбор. Тень Огня — импульсивность, выгорание и борьба за внимание."},{"id":43,"slug":"seven-of-cups","name":"Seven of Cups","name_ru":"Семёрка Кубков","arcana":"minor","suit":"cups","number":7,"symbol":"🏆","keywords_upright":["испытание","выбор","чувства","отношения"],"keywords_reversed":["блок","задержка","чувства","отношения"],"meaning_upright":"Семёрка говорит об испытании, стратегии и необходимости выбрать. Стихия Воды говорит о чувствах, отношениях и движении души.","meaning_reversed":"Перевёрнутая Семёрка — самообман, слабая стратегия или страх сделать выбор. Тень Воды — эмоциональная зависимость, обиды и иллюзии."},{"id":57,"slug":"seven-of-swords","name":"Seven of Swords","name_ru":"Семёрка Мечей","arcana":"minor","suit":"swords","number":7,"symbol":"⚔️","keywords_upright":["испытание","выбор","мысли","истина"],"keywords_reversed":["блок","задержка","мысли","истина"],"meaning_upright":"Семёрка говорит об испытании, стратегии и необходимости выбрать. Стихия Воздуха проясняет мысли, слова и правду.","meaning_reversed":"Перевёрнутая Семёрка — самообман, слабая стратегия или страх сделать выбор. Тень Воздуха — тревожные мысли, конфликты и чрезмерная жёсткость."},{"id":71,"slug":"seven-of-pentacles","name":"Seven of Pentacles","name_ru":"Семёрка Пентаклей","arcana":"minor","suit":"pentacles","number":7,"symbol":"🪙","keywords_upright":["испытание","выбор","деньги","стабильность"],"keywords_reversed":["блок","задержка","деньги","стабильность"],"meaning_upright":"Семёрка говорит об испытании, стратегии и необходимости выбрать. Стихия Земли отвечает за деньги, работу, тело и устойчивость.","meaning_reversed":"Перевёрнутая Семёрка — самообман, слабая стратегия или страх сделать выбор. Тень Земли — жадность, застой и страх потерять накопленное."},{"id":9,"slug":"strength","name":"Strength","name_ru":"Сила","arcana":"major","suit":null,"number":8,"symbol":"VIII","keywords_upright":["мужество","терпение","мягкая сила"],"keywords_reversed":["сомнение","слабость","эмоции"],"meaning_upright":"Мягкая сила и терпение. Настоящая храбрость — действовать спокойно и с любовью.","meaning_reversed":"Сомнения в себе и вспышки эмоций. Ваша сила сейчас в честности и восстановлении ресурса."},{"id":30,"slug":"eight-of-wands","name":"Eight of Wands","name_ru":"Восьмёрка Жезлов","arcana":"minor","suit":"wands","number":8,"symbol":"🪄","keywords_upright":["скорость","мастерство","энергия","действие"],"keywords_reversed":["блок","задержка","энергия","действие"],"meaning_upright":"Восьмёрка ускоряет события и показывает рост мастерства. Стихия Огня добавляет энергии, смелости и желания действовать.","meaning_reversed":"Перевёрнутая Восьмёрка — спешка, повторяющиеся ошибки или потеря темпа. Тень Огня — импульсивность, выгорание и борьба за внимание."},{"id":44,"slug":"eight-of-cups","name":"Eight of Cups","name_ru":"Восьмёрка Кубков","arcana":"minor","suit":"cups","number":8,"symbol":"🏆","keywords_upright":["скорость","мастерство","чувства","отношения"],"keywords_reversed":["блок","задержка","чувства","отношения"],"meaning_upright":"Восьмёрка ускоряет события и показывает рост мастерства. Стихия Воды говорит о чувствах, отношениях и движении души.","meaning_reversed":"Перевёрнутая Восьмёрка — спешка, повторяющиеся ошибки или потеря темпа. Тень Воды — эмоциональная зависимость, обиды и иллюзии."},{"id":58,"slug":"eight-of-swords","name":"Eight of Swords","name_ru":"Восьмёрка Мечей","arcana":"minor","suit":"swords","number":8,"symbol":"⚔️","keywords_upright":["скорость","мастерство","мысли","истина"],"keywords_reversed":["блок","задержка","мысли","истина"],"meaning_upright":"Восьмёрка ускоряет события и показывает рост мастерства. Стихия Воздуха проясняет мысли, слова и правду.","meaning_reversed":"Перевёрнутая Восьмёрка — спешка, повторяющиеся ошибки или потеря темпа. Тень Воздуха — тревожные мысли, конфликты и чрезмерная жёсткость."},{"id":72,"slug":"eight-of-pentacles","name":"Eight of Pentacles","name_ru":"Восьмёрка Пентаклей","arcana":"minor","suit":"pentacles","number":8,"symbol":"🪙","keywords_upright":["скорость","мастерство","деньги","стабильность"],"keywords_reversed":["блок","задержка","деньги","стабильность"],"meaning_upright":"Восьмёрка ускоряет события и показывает рост мастерства. Стихия Земли отвечает за деньги, работу, тело и устойчивость.","meaning_reversed":"Перевёрнутая Восьмёрка — спешка, повторяющиеся ошибки или потеря темпа. Тень Земли — жадность, застой и страх потерять накопленное."},{"id":10,"slug":"the-hermit","name":"The Hermit","name_ru":"Отшельник","arcana":"major","suit":null,"number":9,"symbol":"IX","keywords_upright":["уединение","поиск истины","мудрость"],"keywords_reversed":["изоляция","одиночество","бегство"],"meaning_upright":"Время уединения и поиска истины. Ответы найдутся вдали от суеты.","meaning_reversed":"Изоляция и одиночество. Уединение полезно, но не должно становиться бегством."},{"id":31,"slug":"nine-of-wands","name":"Nine of Wands","name_ru":"Девятка Жезлов","arcana":"minor","suit":"wands","number":9,"symbol":"🪄","keywords_upright":["завершение цикла","изобилие","энергия","действие"],"keywords_reversed":["блок","задержка","энергия","действие"],"meaning_upright":"Девятка говорит о почти завершённом цикле и заслуженном изобилии. Стихия Огня добавляет энергии, смелости и желания действовать.","meaning_reversed":"Перевёрнутая Девятка — тревога, недовольство результатом или страх финала. Тень Огня — импульсивность, выгорание и борьба за внимание."},{"id":45,"slug":"nine-of-cups","name":"Nine of Cups","name_ru":"Девятка Кубков","arcana":"minor","suit":"cups","number":9,"symbol":"🏆","keywords_upright":["завершение цикла","изобилие","чувства","отношения"],"keywords_reversed":["блок","задержка","чувства","отношения"],"meaning_upright":"Девятка говорит о почти завершённом цикле и заслуженном изобилии. Стихия Воды говорит о чувствах, отношениях и движении души.","meaning_reversed":"Перевёрнутая Девятка — тревога, недовольство результатом или страх финала. Тень Воды — эмоциональная зависимость, обиды и иллюзии."},{"id":59,"slug":"nine-of-swords","name":"Nine of Swords","name_ru":"Девятка Мечей","arcana":"minor","suit":"swords","number":9,"symbol":"⚔️","keywords_upright":["завершение цикла","изобилие","мысли","истина"],"keywords_reversed":["блок","задержка","мысли","истина"],"meaning_upright":"Девятка говорит о почти завершённом цикле и заслуженном изобилии. Стихия Воздуха проясняет мысли, слова и правду.","meaning_reversed":"Перевёрнутая Девятка — тревога, недовольство результатом или страх финала. Тень Воздуха — тревожные мысли, конфликты и чрезмерная жёсткость."},{"id":73,"slug":"nine-of-pentacles","name":"Nine of Pentacles","name_ru":"Девятка Пентаклей","arcana":"minor","suit":"pentacles","number":9,"symbol":"🪙","keywords_upright":["завершение цикла","изобилие","деньги","стабильность"],"keywords_reversed":["блок","задержка","деньги","стабильность"],"meaning_upright":"Девятка говорит о почти завершённом цикле и заслуженном изобилии. Стихия Земли отвечает за деньги, работу, тело и устойчивость.","meaning_reversed":"Перевёрнутая Девятка — тревога, недовольство результатом или страх финала. Тень Земли — жадность, застой и страх потерять накопленное."},{"id":11,"slug":"wheel-of-fortune","name":"Wheel of Fortune","name_ru":"Колесо Фортуны","arcana":"major","suit":null,"number":10,"symbol":"X","keywords_upright":["циклы","судьба","перемены"],"keywords_reversed":["сопротивление","задержка","застой"],"meaning_upright":"Судьбоносный поворот и смена цикла. Примите перемены — колесо уже вращается.","meaning_reversed":"Сопротивление неизбежному тормозит движение. Отпустите то, что уже уходит."},{"id":32,"slug":"ten-of-wands","name":"Ten of Wands","name_ru":"Десятка Жезлов","arcana":"minor","suit":"wands","number":10,"symbol":"🪄","keywords_upright":["итог","полнота","энергия","действие"],"keywords_reversed":["блок","задержка","энергия","действие"],"meaning_upright":"Десятка подводит итог и показывает полноту цикла. Стихия Огня добавляет энергии, смелости и желания действовать.","meaning_reversed":"Перевёрнутая Десятка — перегрузка, незавершённость или тяжёлое наследие. Тень Огня — импульсивность, выгорание и борьба за внимание."},{"id":46,"slug":"ten-of-cups","name":"Ten of Cups","name_ru":"Десятка Кубков","arcana":"minor","suit":"cups","number":10,"symbol":"🏆","keywords_upright":["итог","полнота","чувства","отношения"],"keywords_reversed":["блок","задержка","чувства","отношения"],"meaning_upright":"Десятка подводит итог и показывает полноту цикла. Стихия Воды говорит о чувствах, отношениях и движении души.","meaning_reversed":"Перевёрнутая Десятка — перегрузка, незавершённость или тяжёлое наследие. Тень Воды — эмоциональная зависимость, обиды и иллюзии."},{"id":60,"slug":"ten-of-swords","name":"Ten of Swords","name_ru":"Десятка Мечей","arcana":"minor","suit":"swords","number":10,"symbol":"⚔️","keywords_upright":["итог","полнота","мысли","истина"],"keywords_reversed":["блок","задержка","мысли","истина"],"meaning_upright":"Десятка подводит итог и показывает полноту цикла. Стихия Воздуха проясняет мысли, слова и правду.","meaning_reversed":"Перевёрнутая Десятка — перегрузка, незавершённость или тяжёлое наследие. Тень Воздуха — тревожные мысли, конфликты и чрезмерная жёсткость."},{"id":74,"slug":"ten-of-pentacles","name":"Ten of Pentacles","name_ru":"Десятка Пентаклей","arcana":"minor","suit":"pentacles","number":10,"symbol":"🪙","keywords_upright":["итог","полнота","деньги","стабильность"],"keywords_reversed":["блок","задержка","деньги","стабильность"],"meaning_upright":"Десятка подводит итог и показывает полноту цикла. Стихия Земли отвечает за деньги, работу, тело и устойчивость.","meaning_reversed":"Перевёрнутая Десятка — перегрузка, незавершённость или тяжёлое наследие. Тень Земли — жадность, застой и страх потерять накопленное."},{"id":12,"slug":"justice","name":"Justice","name_ru":"Справедливость","arcana":"major","suit":null,"number":11,"symbol":"XI","keywords_upright":["истина","баланс","последствия"],"keywords_reversed":["несправедливость","обман","перекос"],"meaning_upright":"Истина и справедливость. Всё тайное становится явным, решения имеют последствия.","meaning_reversed":"Обман или несправедливость. Проверьте факты и не позволяйте собой манипулировать."},{"id":33,"slug":"page-of-wands","name":"Page of Wands","name_ru":"Паж Жезлов","arcana":"minor","suit":"wands","number":11,"symbol":"🪄","keywords_upright":["весть","любопытство","энергия","действие"],"keywords_reversed":["блок","задержка","энергия","действие"],"meaning_upright":"Паж приносит весть, любопытство и свежий взгляд. Стихия Огня добавляет энергии, смелости и желания действовать.","meaning_reversed":"Перевёрнутый Паж — сплетни, незрелость или отвлекающие новости. Тень Огня — импульсивность, выгорание и борьба за внимание."},{"id":47,"slug":"page-of-cups","name":"Page of Cups","name_ru":"Паж Кубков","arcana":"minor","suit":"cups","number":11,"symbol":"🏆","keywords_upright":["весть","любопытство","чувства","отношения"],"keywords_reversed":["блок","задержка","чувства","отношения"],"meaning_upright":"Паж приносит весть, любопытство и свежий взгляд. Стихия Воды говорит о чувствах, отношениях и движении души.","meaning_reversed":"Перевёрнутый Паж — сплетни, незрелость или отвлекающие новости. Тень Воды — эмоциональная зависимость, обиды и иллюзии."},{"id":61,"slug":"page-of-swords","name":"Page of Swords","name_ru":"Паж Мечей","arcana":"minor","suit":"swords","number":11,"symbol":"⚔️","keywords_upright":["весть","любопытство","мысли","истина"],"keywords_reversed":["блок","задержка","мысли","истина"],"meaning_upright":"Паж приносит весть, любопытство и свежий взгляд. Стихия Воздуха проясняет мысли, слова и правду.","meaning_reversed":"Перевёрнутый Паж — сплетни, незрелость или отвлекающие новости. Тень Воздуха — тревожные мысли, конфликты и чрезмерная жёсткость."},{"id":75,"slug":"page-of-pentacles","name":"Page of Pentacles","name_ru":"Паж Пентаклей","arcana":"minor","suit":"pentacles","number":11,"symbol":"🪙","keywords_upright":["весть","любопытство","деньги","стабильность"],"keywords_reversed":["блок","задержка","деньги","стабильность"],"meaning_upright":"Паж приносит весть, любопытство и свежий взгляд. Стихия Земли отвечает за деньги, работу, тело и устойчивость.","meaning_reversed":"Перевёрнутый Паж — сплетни, незрелость или отвлекающие новости. Тень Земли — жадность, застой и страх потерять накопленное."},{"id":13,"slug":"the-hanged-man","name":"The Hanged Man","name_ru":"Повешенный","arcana":"major","suit":null,"number":12,"symbol":"XII","keywords_upright":["пауза","отпускание","новый взгляд"],"keywords_reversed":["застревание","жертва","страх"],"meaning_upright":"Пауза и смена взгляда. Отпустите контроль и посмотрите на ситуацию иначе.","meaning_reversed":"Вы застряли в роли жертвы или откладываете решение. Пора выйти из подвешенного состояния."},{"id":34,"slug":"knight-of-wands","name":"Knight of Wands","name_ru":"Рыцарь Жезлов","arcana":"minor","suit":"wands","number":12,"symbol":"🪄","keywords_upright":["действие","стремление","энергия","действие"],"keywords_reversed":["блок","задержка","энергия","действие"],"meaning_upright":"Рыцарь зовёт к действию, движению и смелому стремлению к цели. Стихия Огня добавляет энергии, смелости и желания действовать.","meaning_reversed":"Перевёрнутый Рыцарь — безрассудство, спешка или отсутствие направления. Тень Огня — импульсивность, выгорание и борьба за внимание."},{"id":48,"slug":"knight-of-cups","name":"Knight of Cups","name_ru":"Рыцарь Кубков","arcana":"minor","suit":"cups","number":12,"symbol":"🏆","keywords_upright":["действие","стремление","чувства","отношения"],"keywords_reversed":["блок","задержка","чувства","отношения"],"meaning_upright":"Рыцарь зовёт к действию, движению и смелому стремлению к цели. Стихия Воды говорит о чувствах, отношениях и движении души.","meaning_reversed":"Перевёрнутый Рыцарь — безрассудство, спешка или отсутствие направления. Тень Воды — эмоциональная зависимость, обиды и иллюзии."},{"id":62,"slug":"knight-of-swords","name":"Knight of Swords","name_ru":"Рыцарь Мечей","arcana":"minor","suit":"swords","number":12,"symbol":"⚔️","keywords_upright":["действие","стремление","мысли","истина"],"keywords_reversed":["блок","задержка","мысли","истина"],"meaning_upright":"Рыцарь зовёт к действию, движению и смелому стремлению к цели. Стихия Воздуха проясняет мысли, слова и правду.","meaning_reversed":"Перевёрнутый Рыцарь — безрассудство, спешка или отсутствие направления. Тень Воздуха — тревожные мысли, конфликты и чрезмерная жёсткость."},{"id":76,"slug":"knight-of-pentacles","name":"Knight of Pentacles","name_ru":"Рыцарь Пентаклей","arcana":"minor","suit":"pentacles","number":12,"symbol":"🪙","keywords_upright":["действие","стремление","деньги","стабильность"],"keywords_reversed":["блок","задержка","деньги","стабильность"],"meaning_upright":"Рыцарь зовёт к действию, движению и смелому стремлению к цели. Стихия Земли отвечает за деньги, работу, тело и устойчивость.","meaning_reversed":"Перевёрнутый Рыцарь — безрассудство, спешка или отсутствие направления. Тень Земли — жадность, застой и страх потерять накопленное."},{"id":14,"slug":"death","name":"Death","name_ru":"Смерть","arcana":"major","suit":null,"number":13,"symbol":"XIII","keywords_upright":["завершение","трансформация","обновление"],"keywords_reversed":["страх перемен","застой","цепляние"],"meaning_upright":"Завершение одного этапа и трансформация. Освободите место для нового.","meaning_reversed":"Страх перемен и цепляние за прошлое. То, что должно уйти, всё равно уйдёт."},{"id":35,"slug":"queen-of-wands","name":"Queen of Wands","name_ru":"Королева Жезлов","arcana":"minor","suit":"wands","number":13,"symbol":"🪄","keywords_upright":["зрелость","забота","энергия","действие"],"keywords_reversed":["блок","задержка","энергия","действие"],"meaning_upright":"Королева показывает зрелость, заботу и уверенное владение темой. Стихия Огня добавляет энергии, смелости и желания действовать.","meaning_reversed":"Перевёрнутая Королева — ревность, выгорание или чрезмерная опека. Тень Огня — импульсивность, выгорание и борьба за внимание."},{"id":49,"slug":"queen-of-cups","name":"Queen of Cups","name_ru":"Королева Кубков","arcana":"minor","suit":"cups","number":13,"symbol":"🏆","keywords_upright":["зрелость","забота","чувства","отношения"],"keywords_reversed":["блок","задержка","чувства","отношения"],"meaning_upright":"Королева показывает зрелость, заботу и уверенное владение темой. Стихия Воды говорит о чувствах, отношениях и движении души.","meaning_reversed":"Перевёрнутая Королева — ревность, выгорание или чрезмерная опека. Тень Воды — эмоциональная зависимость, обиды и иллюзии."},{"id":63,"slug":"queen-of-swords","name":"Queen of Swords","name_ru":"Королева Мечей","arcana":"minor","suit":"swords","number":13,"symbol":"⚔️","keywords_upright":["зрелость","забота","мысли","истина"],"keywords_reversed":["блок","задержка","мысли","истина"],"meaning_upright":"Королева показывает зрелость, заботу и уверенное владение темой. Стихия Воздуха проясняет мысли, слова и правду.","meaning_reversed":"Перевёрнутая Королева — ревность, выгорание или чрезмерная опека. Тень Воздуха — тревожные мысли, конфликты и чрезмерная жёсткость."},{"id":77,"slug":"queen-of-pentacles","name":"Queen of Pentacles","name_ru":"Королева Пентаклей","arcana":"minor","suit":"pentacles","number":13,"symbol":"🪙","keywords_upright":["зрелость","забота","деньги","стабильность"],"keywords_reversed":["блок","задержка","деньги","стабильность"],"meaning_upright":"Королева показывает зрелость, заботу и уверенное владение темой. Стихия Земли отвечает за деньги, работу, тело и устойчивость.","meaning_reversed":"Перевёрнутая Королева — ревность, выгорание или чрезмерная опека. Тень Земли — жадность, застой и страх потерять накопленное."},{"id":15,"slug":"temperance","name":"Temperance","name_ru":"Умеренность","arcana":"major","suit":null,"number":14,"symbol":"XIV","keywords_upright":["гармония","баланс","исцеление"],"keywords_reversed":["дисбаланс","крайности","нетерпение"],"meaning_upright":"Гармония и исцеление. Найдите баланс между крайностями и действуйте размеренно.","meaning_reversed":"Перекосы и нетерпение. Верните равновесие, прежде чем двигаться дальше."},{"id":36,"slug":"king-of-wands","name":"King of Wands","name_ru":"Король Жезлов","arcana":"minor","suit":"wands","number":14,"symbol":"🪄","keywords_upright":["власть","опыт","энергия","действие"],"keywords_reversed":["блок","задержка","энергия","действие"],"meaning_upright":"Король говорит о власти, опыте и ответственном лидерстве. Стихия Огня добавляет энергии, смелости и желания действовать.","meaning_reversed":"Перевёрнутый Король — тирания, упрямство или злоупотребление влиянием. Тень Огня — импульсивность, выгорание и борьба за внимание."},{"id":50,"slug":"king-of-cups","name":"King of Cups","name_ru":"Король Кубков","arcana":"minor","suit":"cups","number":14,"symbol":"🏆","keywords_upright":["власть","опыт","чувства","отношения"],"keywords_reversed":["блок","задержка","чувства","отношения"],"meaning_upright":"Король говорит о власти, опыте и ответственном лидерстве. Стихия Воды говорит о чувствах, отношениях и движении души.","meaning_reversed":"Перевёрнутый Король — тирания, упрямство или злоупотребление влиянием. Тень Воды — эмоциональная зависимость, обиды и иллюзии."},{"id":64,"slug":"king-of-swords","name":"King of Swords","name_ru":"Король Мечей","arcana":"minor","suit":"swords","number":14,"symbol":"⚔️","keywords_upright":["власть","опыт","мысли","истина"],"keywords_reversed":["блок","задержка","мысли","истина"],"meaning_upright":"Король говорит о власти, опыте и ответственном лидерстве. Стихия Воздуха проясняет мысли, слова и правду.","meaning_reversed":"Перевёрнутый Король — тирания, упрямство или злоупотребление влиянием. Тень Воздуха — тревожные мысли, конфликты и чрезмерная жёсткость."},{"id":78,"slug":"king-of-pentacles","name":"King of Pentacles","name_ru":"Король Пентаклей","arcana":"minor","suit":"pentacles","number":14,"symbol":"🪙","keywords_upright":["власть","опыт","деньги","стабильность"],"keywords_reversed":["блок","задержка","деньги","стабильность"],"meaning_upright":"Король говорит о власти, опыте и ответственном лидерстве. Стихия Земли отвечает за деньги, работу, тело и устойчивость.","meaning_reversed":"Перевёрнутый Король — тирания, упрямство или злоупотребление влиянием. Тень Земли — жадность, застой и страх потерять накопленное."},{"id":16,"slug":"the-devil","name":"The Devil","name_ru":"Дьявол","arcana":"major","suit":null,"number":15,"symbol":"XV","keywords_upright":["искушение","желание","тень"],"keywords_reversed":["освобождение","прозрение","разрыв"],"meaning_upright":"Искушение и теневые желания. Осознайте, что держит вас в зависимости.","meaning_reversed":"Освобождение от иллюзий и вредных привычек. У вас есть сила разорвать цепь."},{"id":17,"slug":"the-tower","name":"The Tower","name_ru":"Башня","arcana":"major","suit":null,"number":16,"symbol":"XVI","keywords_upright":["потрясение","разрушение","прорыв"],"keywords_reversed":["отложенный кризис","страх","напряжение"],"meaning_upright":"Внезапные перемены разрушают старое. После потрясения освобождается место для правды.","meaning_reversed":"Кризис откладывается, но напряжение растёт. Разберитесь с проблемой до того, как она взорвётся."},{"id":18,"slug":"the-star","name":"The Star","name_ru":"Звезда","arcana":"major","suit":null,"number":17,"symbol":"XVII","keywords_upright":["надежда","вдохновение","исцеление"],"keywords_reversed":["уныние","потеря веры","разочарование"],"meaning_upright":"Надежда и вдохновение. После трудного периода приходит исцеление и вера в будущее.","meaning_reversed":"Уныние и потеря веры. Свет вернётся, если позаботиться о себе и позволить себе мечтать."},{"id":19,"slug":"the-moon","name":"The Moon","name_ru":"Луна","arcana":"major","suit":null,"number":18,"symbol":"XVIII","keywords_upright":["иллюзии","страхи","подсознание"],"keywords_reversed":["прояснение","выход из тумана","правда"],"meaning_upright":"Иллюзии и страхи выходят на поверхность. Доверяйте чувствам, но проверяйте реальность.","meaning_reversed":"Туман рассеивается. Скрытое становится понятным, страхи теряют власть."},{"id":20,"slug":"the-sun","name":"The Sun","name_ru":"Солнце","arcana":"major","suit":null,"number":19,"symbol":"XIX","keywords_upright":["радость","успех","ясность"],"keywords_reversed":["временные тучи","ложный оптимизм"],"meaning_upright":"Радость, успех и ясность. Жизнь поддерживает вас, делитесь своим светом.","meaning_reversed":"Временные трудности омрачают радость. Не путайте паузу с поражением."},{"id":21,"slug":"judgement","name":"Judgement","name_ru":"Суд","arcana":"major","suit":null,"number":20,"symbol":"XX","keywords_upright":["пробуждение","призвание","итоги"],"keywords_reversed":["самокритика","откладывание","сомнение"],"meaning_upright":"Пробуждение и призвание. Время подвести итоги и ответить на зов души.","meaning_reversed":"Самокритика и откладывание важного решения. Простите себя и двигайтесь дальше."},{"id":22,"slug":"the-world","name":"The World","name_ru":"Мир","arcana":"major","suit":null,"number":21,"symbol":"XXI","keywords_upright":["завершение","целостность","успех"],"keywords_reversed":["незавершённость","страх финала"],"meaning_upright":"Завершение большого цикла и целостность. Вы достигли важной вершины.","meaning_reversed":"Что-то осталось незавершённым. Закройте гештальты, прежде чем начинать новое."}];
+  const STORAGE_KEY = "mystic_tarot_readings";
+  const MAX_HISTORY = 100;
   const $ = (id) => document.getElementById(id);
-  const TOKEN_KEY = "tarot_token";
-  let SPREAD_LABELS = {};
-  let token = localStorage.getItem(TOKEN_KEY) || "";
-  let me = null;
+  const spreadById = {};
+  SPREADS.forEach((s) => { spreadById[s.id] = s; });
   let chosenSpread = "three";
 
-  // ---------- API ----------
-  async function api(path, options) {
-    options = options || {};
-    const headers = Object.assign({ "Content-Type": "application/json" }, options.headers || {});
-    if (token) headers["Authorization"] = "Bearer " + token;
-    const res = await fetch("/api/v1" + path, Object.assign({}, options, { headers }));
-    let data = null;
-    const text = await res.text();
-    if (text) { try { data = JSON.parse(text); } catch (e) { data = null; } }
-    if (!res.ok) {
-      if (res.status === 401 && token && path !== "/auth/login") { logout(false); }
-      const msg = data && (data.detail && (typeof data.detail === "string" ? data.detail : JSON.stringify(data.detail)) || data.message);
-      const err = new Error(msg || ("Ошибка сервера (" + res.status + ")"));
-      err.status = res.status;
-      throw err;
-    }
-    return data;
-  }
-
-  // ---------- Авторизация ----------
-  let authMode = "login";
-  function setAuthMode(mode) {
-    authMode = mode;
-    $("tab-login").classList.toggle("active", mode === "login");
-    $("tab-register").classList.toggle("active", mode === "register");
-    $("reg-name-wrap").classList.toggle("hidden", mode !== "register");
-    $("pass-hint").textContent = mode === "register" ? "Минимум 8 символов" : "";
-    $("btn-auth").textContent = mode === "register" ? "Зарегистрироваться" : "Войти";
-    $("auth-error").textContent = "";
-  }
-  $("tab-login").onclick = () => setAuthMode("login");
-  $("tab-register").onclick = () => setAuthMode("register");
-
-  $("btn-auth").onclick = async () => {
-    const email = $("f-email").value.trim();
-    const pass = $("f-pass").value;
-    const err = $("auth-error");
-    err.textContent = "";
-    if (!email || !email.includes("@")) { err.textContent = "Введите корректный email."; return; }
-    if (authMode === "register") {
-      const name = $("f-name").value.trim();
-      if (name.length < 2) { err.textContent = "Имя должно быть не короче 2 символов."; return; }
-      if (pass.length < 8) { err.textContent = "Пароль должен быть не короче 8 символов."; return; }
-      $("btn-auth").disabled = true;
-      try {
-        const data = await api("/auth/register", { method: "POST", body: JSON.stringify({ email: email, display_name: name, password: pass }) });
-        afterAuth(data);
-      } catch (e) {
-        if (e.status === 409) err.textContent = "Пользователь с таким email уже существует.";
-        else if (e.status === 422) err.textContent = "Проверьте данные: имя 2–60 символов, пароль 8–128 символов.";
-        else err.textContent = e.message || "Не удалось подключиться к серверу.";
-      } finally { $("btn-auth").disabled = false; }
-    } else {
-      $("btn-auth").disabled = true;
-      try {
-        const data = await api("/auth/login", { method: "POST", body: JSON.stringify({ email: email, password: pass }) });
-        afterAuth(data);
-      } catch (e) {
-        if (e.status === 401) err.textContent = "Неверный email или пароль.";
-        else err.textContent = e.message || "Не удалось подключиться к серверу.";
-      } finally { $("btn-auth").disabled = false; }
-    }
-  };
-
-  function afterAuth(data) {
-    token = data.access_token;
-    me = data.user;
-    localStorage.setItem(TOKEN_KEY, token);
-    try { localStorage.setItem("tarot_user", JSON.stringify(me)); } catch (e) {}
-    showMain();
-  }
-
-  function logout(clearServer) {
-    token = ""; me = null;
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem("tarot_user");
-    $("view-main").classList.add("hidden");
-    $("view-auth").classList.remove("hidden");
-  }
-  $("btn-logout").onclick = () => logout(false);
-
-  // ---------- Основной экран ----------
-  function showMain() {
-    $("view-auth").classList.add("hidden");
-    $("view-main").classList.remove("hidden");
-    $("who-name").textContent = me.display_name;
-    $("hello").textContent = "Привет, " + me.display_name;
-    if (!Object.keys(SPREAD_LABELS).length) loadSpreads();
-    loadHistory();
+  function escapeHtml(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   }
 
   function cardsLabel(count) {
@@ -315,41 +187,17 @@
     return count + " " + word;
   }
 
-  // каталог раскладов
-  async function loadSpreads() {
-    const box = $("spreads");
-    try {
-      const items = await api("/tarot/spreads");
-      SPREAD_LABELS = {};
-      box.innerHTML = items.map((s) =>
-        '<label class="radio" data-v="' + escapeHtml(s.id) + '">' +
-          '<span class="dot"></span>' +
-          '<span><b>' + escapeHtml(s.title) + '</b>' +
-          '<small>' + escapeHtml(s.description) + ' · ' + cardsLabel(s.cards_count) + '</small></span>' +
-        '</label>').join("");
-      if (!items.some((s) => s.id === chosenSpread)) {
-        chosenSpread = items.some((s) => s.id === "three") ? "three" : (items[0] ? items[0].id : "three");
-      }
-      items.forEach((s) => { SPREAD_LABELS[s.id] = s.title; });
-      renderSpread();
-    } catch (e) {
-      box.innerHTML = '<div class="hint">Не удалось загрузить каталог раскладов. Проверьте соединение с сервером.</div>';
-    }
-  }
-
-  // выбор расклада
-  function renderSpread() {
+  function renderSpreads() {
+    $("spreads").innerHTML = SPREADS.map((s) =>
+      '<label class="radio" data-v="' + escapeHtml(s.id) + '">' +
+        '<span class="dot"></span>' +
+        '<span><b>' + escapeHtml(s.title) + '</b>' +
+        '<small>' + escapeHtml(s.description) + ' · ' + cardsLabel(s.positions.length) + '</small></span>' +
+      '</label>').join("");
     document.querySelectorAll("#spreads .radio").forEach((el) => {
       el.classList.toggle("checked", el.dataset.v === chosenSpread);
-      el.onclick = () => { chosenSpread = el.dataset.v; renderSpread(); };
+      el.onclick = () => { chosenSpread = el.dataset.v; renderSpreads(); };
     });
-  }
-  loadSpreads();
-
-  $("f-question").addEventListener("input", () => { $("q-count").textContent = String($("f-question").value.length); });
-
-  function escapeHtml(s) {
-    return String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   }
 
   function cardHtml(rc, compact) {
@@ -368,71 +216,110 @@
   }
 
   function showReading(r, scroll) {
-    const box = $("result-box");
+    const spread = spreadById[r.spread];
     const cols = r.cards.length === 1 ? "c1" : r.cards.length === 3 ? "c3" : "c10";
     const compact = r.cards.length >= 6;
-    box.innerHTML =
+    const title = spread ? spread.title : (r.spread_label || r.spread);
+    $("result-box").innerHTML =
       '<div class="panel">' +
-        '<button class="back hidden" id="btn-back">← Назад к раскладам</button>' +
-        '<h2 style="margin-top:0">Расклад<span class="badge">' + escapeHtml(SPREAD_LABELS[r.spread] || r.spread_label || r.spread) + '</span></h2>' +
+        '<h2 style="margin-top:0">Расклад<span class="badge">' + escapeHtml(title) + '</span></h2>' +
         '<div class="reading-meta">' + new Date(r.created_at).toLocaleString("ru-RU", { day: "2-digit", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" }) + '</div>' +
         (r.question ? '<div class="q">«' + escapeHtml(r.question) + '»</div>' : "") +
         '<div class="cards ' + cols + '">' + r.cards.map((rc) => cardHtml(rc, compact)).join("") + '</div>' +
       '</div>';
-    if (scroll) box.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (scroll) $("result-box").scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  $("btn-draw").onclick = async () => {
+  function readHistory() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return [];
+      const items = JSON.parse(raw);
+      return Array.isArray(items) ? items : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function writeHistory(items) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(items.slice(0, MAX_HISTORY))); } catch (e) {}
+  }
+
+  function loadHistory() {
+    const box = $("history");
+    const items = readHistory();
+    if (!items.length) {
+      box.innerHTML = '<p class="sub">Раскладов пока нет — откройте первую карту выше.</p>';
+      return;
+    }
+    box.innerHTML = items.slice(0, 20).map((r) =>
+      '<div class="history-item" data-id="' + escapeHtml(r.id) + '">' +
+        '<div class="row"><span class="who2">' + escapeHtml(r.question || "Без вопроса") + '</span>' +
+        '<span class="when">' + new Date(r.created_at).toLocaleString("ru-RU", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) + '</span></div>' +
+        '<small>' + escapeHtml(spreadById[r.spread] ? spreadById[r.spread].title : (r.spread_label || r.spread)) + ' · ' + cardsLabel(r.cards.length) + '</small>' +
+      '</div>').join("");
+    box.querySelectorAll(".history-item").forEach((el) => {
+      el.onclick = () => {
+        const found = readHistory().find((r) => r.id === el.dataset.id);
+        if (found) showReading(found, true);
+      };
+    });
+  }
+
+  function newId() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return "r-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10);
+  }
+
+  function drawReading() {
     const q = $("f-question").value.trim();
     const err = $("draw-error");
     err.textContent = "";
     if (q.length < 3) { err.textContent = "Опишите вопрос (минимум 3 символа)."; return; }
-    $("btn-draw").disabled = true;
-    $("draw-error").textContent = "";
-    try {
-      const r = await api("/tarot/draw", { method: "POST", body: JSON.stringify({ question: q, spread: chosenSpread }) });
-      showReading(r, true);
-      $("f-question").value = "";
-      $("q-count").textContent = "0";
-      loadHistory();
-    } catch (e) {
-      err.textContent = e.message || "Не удалось получить расклад.";
-    } finally { $("btn-draw").disabled = false; }
-  };
 
-  // ---------- История ----------
-  async function loadHistory() {
-    const box = $("history");
-    box.innerHTML = '<div class="spin"></div>';
-    try {
-      const items = await api("/tarot/readings?limit=20");
-      if (!items.length) { box.innerHTML = '<p class="sub">Раскладов пока нет — откройте первую карту выше.</p>'; return; }
-      box.innerHTML = items.map((r) =>
-        '<div class="history-item" data-id="' + escapeHtml(r.id) + '">' +
-          '<div class="row"><span class="who2">' + escapeHtml(r.question) + '</span>' +
-          '<span class="when">' + new Date(r.created_at).toLocaleString("ru-RU", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) + '</span></div>' +
-          '<small>' + escapeHtml(r.spread_label || SPREAD_LABELS[r.spread] || r.spread) + ' · карт: ' + r.cards.length + '</small>' +
-        '</div>').join("");
-      box.querySelectorAll(".history-item").forEach((el) => {
-        el.onclick = async () => {
-          try {
-            const r = await api("/tarot/readings/" + el.dataset.id);
-            showReading(r, true);
-          } catch (e) { $("draw-error").textContent = e.message; }
-        };
-      });
-    } catch (e) {
-      box.innerHTML = "";
-      if (e.status !== 401) box.innerHTML = '<p class="sub">Не удалось загрузить историю: ' + escapeHtml(e.message) + '</p>';
+    const spread = spreadById[chosenSpread] || SPREADS[0];
+    if (!CARDS.length || CARDS.length < spread.positions.length) {
+      err.textContent = "Не удалось загрузить колоду карт.";
+      return;
     }
+
+    const deck = CARDS.slice();
+    for (let i = deck.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const tmp = deck[i]; deck[i] = deck[j]; deck[j] = tmp;
+    }
+
+    const reading = {
+      id: newId(),
+      question: q,
+      spread: spread.id,
+      spread_label: spread.title,
+      created_at: new Date().toISOString(),
+      cards: deck.slice(0, spread.positions.length).map((card, index) => ({
+        position: index + 1,
+        position_name: spread.positions[index],
+        reversed: Math.random() < 0.3,
+        card: card,
+      })),
+    };
+
+    const history = readHistory();
+    history.unshift(reading);
+    writeHistory(history);
+
+    showReading(reading, true);
+    $("f-question").value = "";
+    $("q-count").textContent = "0";
+    loadHistory();
   }
 
-  // ---------- Старт ----------
-  if (token) {
-    api("/auth/me")
-      .then((user) => { me = user; try { localStorage.setItem("tarot_user", JSON.stringify(me)); } catch (e) {} showMain(); })
-      .catch(() => { /* logout(false) уже вызван при 401 */ });
-  }
+  $("f-question").addEventListener("input", () => {
+    $("q-count").textContent = String($("f-question").value.length);
+  });
+  $("btn-draw").onclick = drawReading;
+
+  renderSpreads();
+  loadHistory();
 })();
 </script>
 </body>
