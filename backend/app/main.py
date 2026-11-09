@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -43,14 +44,13 @@ def create_app() -> FastAPI:
         tarot.router, prefix=f"{settings.API_V1_PREFIX}/tarot", tags=["tarot"]
     )
 
-    @application.get("/", tags=["system"])
-    async def root() -> dict[str, str]:
-        return {
-            "status": "ok",
-            "service": settings.PROJECT_NAME,
-            "version": settings.VERSION,
-            "docs": "/docs",
-        }
+    @application.get("/", tags=["system"], include_in_schema=False)
+    async def web_app() -> FileResponse:
+        """Веб-версия приложения — открывается по ссылке в браузере."""
+        index = Path(__file__).resolve().parent.parent / "static" / "index.html"
+        if index.is_file():
+            return FileResponse(index, media_type="text/html")
+        return JSONResponse(status_code=404, content={"detail": "Web UI not found"})
 
     @application.get("/health", tags=["system"])
     async def health(session: AsyncSession = Depends(get_db)):
