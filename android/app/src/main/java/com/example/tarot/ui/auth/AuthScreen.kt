@@ -12,16 +12,21 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -44,6 +49,7 @@ import com.example.tarot.ui.components.ErrorBanner
 fun AuthScreen(
     repository: TarotRepository,
     onAuthenticated: () -> Unit,
+    onOpenArcanika: () -> Unit,
 ) {
     val viewModel: AuthViewModel = viewModel(factory = AuthViewModel.factory(repository))
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -186,9 +192,26 @@ fun AuthScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(18.dp))
+
+        OutlinedButton(
+            onClick = onOpenArcanika,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+        ) {
+            Icon(
+                imageVector = Icons.Default.Star,
+                contentDescription = null,
+                modifier = Modifier.size(18.dp),
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Открыть Arcanika — расклады Таро")
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = "Ваши расклады сохраняются только в вашем аккаунте",
+            text = "Сайт откроется во встроенном браузере. Расклады Mystic Tarot сохраняются в вашем аккаунте",
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,

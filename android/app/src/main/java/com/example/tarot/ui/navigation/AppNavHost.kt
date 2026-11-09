@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.tarot.data.TarotRepository
+import com.example.tarot.ui.arcanika.ArcanikaScreen
 import com.example.tarot.ui.auth.AuthScreen
 import com.example.tarot.ui.history.HistoryScreen
 import com.example.tarot.ui.history.ReadingDetailScreen
@@ -18,6 +19,7 @@ object Routes {
     const val HOME = "home"
     const val HISTORY = "history"
     const val READING = "reading/{readingId}"
+    const val ARCANIKA = "arcanika"
 
     fun reading(readingId: String): String = "reading/$readingId"
 }
@@ -44,6 +46,7 @@ fun AppNavHost(
                         launchSingleTop = true
                     }
                 },
+                onOpenArcanika = { navController.navigate(Routes.ARCANIKA) },
             )
         }
 
@@ -57,6 +60,7 @@ fun AppNavHost(
                         launchSingleTop = true
                     }
                 },
+                onOpenArcanika = { navController.navigate(Routes.ARCANIKA) },
             )
         }
 
@@ -67,6 +71,10 @@ fun AppNavHost(
                     navController.navigate(Routes.reading(readingId))
                 },
             )
+        }
+
+        composable(Routes.ARCANIKA) {
+            ArcanikaScreen(onBack = { navController.popBackStack() })
         }
 
         composable(

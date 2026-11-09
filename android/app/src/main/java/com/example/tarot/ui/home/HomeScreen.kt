@@ -54,6 +54,7 @@ import com.example.tarot.util.formatReadingDate
 fun HomeScreen(
     repository: TarotRepository,
     onLoggedOut: () -> Unit,
+    onOpenArcanika: () -> Unit,
 ) {
     val viewModel: HomeViewModel = viewModel(factory = HomeViewModel.factory(repository))
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -106,6 +107,23 @@ fun HomeScreen(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
+                }
+            }
+
+            item {
+                OutlinedButton(
+                    onClick = onOpenArcanika,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Star,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp),
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Открыть Arcanika — расклады Таро")
                 }
             }
 
