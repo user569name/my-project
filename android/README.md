@@ -121,12 +121,14 @@ app/src/main/java/com/example/tarot/
 │       ├── ApiModels.kt       # DTO с @SerializedName
 │       ├── ApiErrors.kt       # русские сообщения об ошибках
 │       └── TarotApi.kt        # endpoints
-├── domain/SpreadOption.kt     # single / three / celtic
+├── domain/SpreadOption.kt     # 12 раскладов, категории и позиции
 ├── ui/
 │   ├── AppRoot.kt             # Scaffold + нижняя панель
 │   ├── navigation/AppNavHost.kt
 │   ├── auth/                  # вход и регистрация
-│   ├── home/                  # вопрос и новый расклад
+│   ├── home/                  # главный экран-хаб
+│   ├── spreads/               # каталог с поиском и фильтрами
+│   ├── reading/               # экран гадания по выбранной схеме
 │   ├── history/               # история и детали
 │   ├── components/            # общие composable
 │   └── theme/                 # тёмная тема
