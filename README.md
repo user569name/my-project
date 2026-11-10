@@ -1,20 +1,25 @@
 # Mystic Tarot
 
-Полноценное приложение для раскладов Таро: REST API на **FastAPI**, Android-клиент на **Kotlin + Jetpack Compose**, база **PostgreSQL**, упаковка в **Docker** и пайплайны **GitHub Actions (CI/CD)**.
+Приложение для раскладов Таро: автономный Android-клиент на **Kotlin + Jetpack Compose**, статичная веб-версия на **GitHub Pages**, REST API на **FastAPI**, база **PostgreSQL**, упаковка в **Docker** и пайплайны **GitHub Actions (CI/CD)**.
 
 В колоде все 78 карт: 22 старших аркана и 56 младших (Жезлы, Кубки, Мечи, Пентакли) с прямыми и перевёрнутыми значениями на русском языке.
 
+- **Android-приложение работает полностью офлайн**: колода лежит в `assets/cards.json`, история — в `SharedPreferences`. Сервер и интернет не нужны.
+- **Веб-версия**: https://user569name.github.io/my-project/ — данные встроены в страницу, история хранится в `localStorage`.
+- **APK**: https://github.com/user569name/my-project/releases/latest
+
 ## Возможности
 
-- Регистрация и вход по email с JWT-аутентификацией.
 - Каталог из 12 собственных раскладов с поиском и фильтрами по категориям.
 - Экран гадания для выбранной схемы: вопрос, позиции карт и сохранение результата.
 - Главный экран-хаб с популярными схемами и последним раскладом.
 - Случайная ориентация карт (прямая/перевёрнутая) и сохранение истории раскладов.
-- Просмотр и удаление своих раскладов; чужие расклады недоступны.
-- Swagger UI и OpenAPI-схема.
+- Автономный режим: главный экран открывается сразу, аккаунт и вход не нужны.
+- Просмотр и удаление сохранённых раскладов, детали с полными значениями карт.
+- Веб-версия без API-запросов: каталог, гадание и история работают в браузере.
+- Бэкенд с JWT-аутентификацией, Swagger UI и OpenAPI-схемой сохранён для развития API.
 - Миграции Alembic, автоматический сидинг колоды при старте.
-- Тёмная «мистическая» тема Compose, экраны входа, гадания, истории и деталей.
+- Тёмная «мистическая» тема Compose, экраны каталога, гадания, истории и деталей.
 - Тесты API на pytest (каталог раскладов, гадания, авторизация), unit-тесты Android, линтеры.
 - Docker Compose для локального запуска и production-конфигурация.
 - CI для бэкенда и Android, CD с публикацией Docker-образа в GHCR и APK в GitHub Releases.
@@ -25,7 +30,8 @@
 | --- | --- |
 | Backend | Python 3.12, FastAPI, SQLAlchemy 2 (async), Pydantic 2, Alembic, PyJWT, Argon2 |
 | База данных | PostgreSQL 18 |
-| Android | Kotlin 2.4, Jetpack Compose (Material 3), Navigation Compose, ViewModel + StateFlow, Retrofit/OkHttp/Gson |
+| Android | Kotlin 2.4, Jetpack Compose (Material 3), Navigation Compose, ViewModel + StateFlow, Gson, SharedPreferences |
+| Веб-версия | HTML/CSS/JS без фреймворков, данные встроены в страницу, GitHub Pages |
 | Сборка Android | Gradle 9.8.1, AGP 9.5.1, JDK 21, compileSdk 37 |
 | Инфраструктура | Docker, Docker Compose, GitHub Actions |
 
@@ -70,15 +76,22 @@ cd android
 
 APK: `android/app/build/outputs/apk/debug/app-debug.apk`.
 
+Приложение автономно: при первом запуске главный экран открывается сразу, колода читается из `assets/cards.json`, расклады сохраняются в `SharedPreferences`. Адрес API, вход и интернет не требуются.
+
 Готовый debug APK также публикуется в [GitHub Releases](https://github.com/user569name/my-project/releases/latest).
 
-По умолчанию приложение обращается к `http://10.0.2.2:8000/` — это адрес хоста из Android-эмулятора. Для физического устройства укажите IP компьютера:
+### 3. Веб-версия
+
+Публичная ссылка: **https://user569name.github.io/my-project/** (источник — каталог `docs/`).
+
+Пересобрать страницу с актуальными раскладами и колодой:
 
 ```bash
-./gradlew assembleDebug -PapiBaseUrl=http://192.168.1.10:8000/
+# бэкенд должен быть запущен на http://127.0.0.1:8000
+python scripts/build_web.py
 ```
 
-> Для локальной разработки в манифесте разрешён HTTP (`usesCleartextTraffic`). Для production используйте HTTPS и отключите cleartext.
+Скрипт встраивает данные в `web/index.template.html` и записывает результат в `backend/static/index.html` и `docs/index.html`. Страница не делает API-запросов; история хранится в `localStorage`.
 
 ## Локальная разработка бэкенда без Docker
 
@@ -114,6 +127,8 @@ cd android
 ```
 
 ## API
+
+API используется веб-бэкендом и доступен для развития интеграций; Android-приложению и статичной веб-версии он не нужен.
 
 Базовый префикс: `/api/v1`.
 
@@ -161,14 +176,20 @@ curl -X POST http://localhost:8000/api/v1/tarot/draw \
 │   ├── Dockerfile
 │   └── requirements*.txt
 ├── android/
-│   └── app/src/main/java/com/example/tarot/
-│       ├── data/           # Retrofit, repository, token storage
-│       ├── domain/         # модели предметной области
-│       ├── ui/             # Compose-экраны, ViewModel, тема
-│       └── util/
+│   └── app/src/main/
+│       ├── assets/cards.json  # локальная колода из 78 карт
+│       └── java/com/example/tarot/
+│           ├── data/          # локальный repository и история
+│           ├── domain/        # модели предметной области
+│           ├── ui/            # Compose-экраны, ViewModel, тема
+│           └── util/
+├── web/                     # шаблон автономной веб-версии
+├── scripts/build_web.py     # генерация статичной страницы
+├── docs/                    # GitHub Pages (index.html)
+├── dist/                    # собранные APK
 ├── docker-compose.yml
 ├── docker-compose.prod.yml
-└── .github/workflows/      # CI/CD
+└── .github/workflows/       # CI/CD
 ```
 
 Подробнее — в [ARCHITECTURE.md](ARCHITECTURE.md). Инструкции для контрибьюторов и релизный процесс — в [CONTRIBUTING.md](CONTRIBUTING.md), детали Android-клиента — в [android/README.md](android/README.md).

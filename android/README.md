@@ -1,6 +1,6 @@
 # Mystic Tarot — Android
 
-Клиент для сервиса раскладов Таро: Kotlin, Jetpack Compose (Material 3), Navigation Compose, ViewModel + StateFlow, Retrofit/OkHttp/Gson. Один Activity, ручное внедрение зависимостей.
+Автономный клиент для раскладов Таро: Kotlin, Jetpack Compose (Material 3), Navigation Compose, ViewModel + StateFlow, Gson, SharedPreferences. Один Activity, ручное внедрение зависимостей. Сервер и интернет не нужны.
 
 ## Требования
 
@@ -77,74 +77,56 @@ android/app/build/outputs/apk/debug/app-debug.apk
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-### Адрес API
+### Автономный режим
 
-По умолчанию используется `http://10.0.2.2:8000/` — так эмулятор обращается к `localhost` компьютера. Для физического устройства нужен IP компьютера в той же сети:
+Приложение не обращается к API: колода читается из `app/src/main/assets/cards.json`, история раскладов хранится в `SharedPreferences`. Вход и регистрация не используются; главный экран открывается сразу.
 
-```bash
-./gradlew assembleDebug -PapiBaseUrl=http://192.168.1.10:8000/
-```
-
-Свойство попадает в `BuildConfig.API_BASE_URL` при сборке. Backend должен быть запущен и слушать `0.0.0.0:8000` (Docker Compose делает это по умолчанию).
-
-### Если эмулятор не подключается к `10.0.2.2`
-
-На некоторых конфигурациях Windows (WHPX-гипервизор + Docker Desktop) трафик эмулятора к `10.0.2.2:8000` не проходит — OkHttp падает с `SocketTimeoutException: failed to connect to /10.0.2.2 (port 8000)`. Признак: `curl`/браузер на самом ПК к `localhost:8000` работают, а запросы приложения в backend-логи не приходят.
-
-Надёжное обходное решение — `adb reverse`: приложение обращается к `127.0.0.1:8000` внутри эмулятора, а adb заворачивает этот порт напрямую в порт хоста:
+Проверить работу без сети можно в авиарежиме эмулятора:
 
 ```bash
-# один раз перед запуском приложения (после каждого перезапуска эмулятора)
-adb reverse tcp:8000 tcp:8000
-
-# и собрать APK с локальным адресом
-./gradlew assembleDebug -PapiBaseUrl=http://127.0.0.1:8000/
+adb shell cmd connectivity airplane-mode enable
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+adb shell pm clear com.example.tarot
+adb shell am start -n com.example.tarot/.MainActivity
 ```
 
-Backend при этом продолжает слушать `0.0.0.0:8000`.
-
-В манифесте включён `android:usesCleartextTraffic="true"` для HTTP при локальной разработке. Для production используйте HTTPS и отключите cleartext.
+> Для локальной разработки в манифесте может оставаться `android:usesCleartextTraffic="true"`; приложение всё равно не делает сетевых запросов.
 
 ## Структура
 
 ```text
-app/src/main/java/com/example/tarot/
-├── TarotApplication.kt        # создаёт AppContainer
-├── MainActivity.kt            # setContent { AppRoot() }
-├── data/
-│   ├── AppContainer.kt        # ручной DI: TokenStore + Retrofit + Repository
-│   ├── TokenStore.kt          # SharedPreferences с JWT
-│   ├── TarotRepository.kt     # операции API
-│   └── remote/
-│       ├── ApiClient.kt       # Retrofit/OkHttp
-│       ├── AuthInterceptor.kt # Bearer-токен
-│       ├── ApiModels.kt       # DTO с @SerializedName
-│       ├── ApiErrors.kt       # русские сообщения об ошибках
-│       └── TarotApi.kt        # endpoints
-├── domain/SpreadOption.kt     # 12 раскладов, категории и позиции
-├── ui/
-│   ├── AppRoot.kt             # Scaffold + нижняя панель
-│   ├── navigation/AppNavHost.kt
-│   ├── auth/                  # вход и регистрация
-│   ├── home/                  # главный экран-хаб
-│   ├── spreads/               # каталог с поиском и фильтрами
-│   ├── reading/               # экран гадания по выбранной схеме
-│   ├── history/               # история и детали
-│   ├── components/            # общие composable
-│   └── theme/                 # тёмная тема
-└── util/DateFormatter.kt
+app/src/main/
+├── assets/cards.json           # локальная колода из 78 карт
+└── java/com/example/tarot/
+    ├── TarotApplication.kt     # создаёт AppContainer
+    ├── MainActivity.kt         # setContent { AppRoot() }
+    ├── data/
+    │   ├── AppContainer.kt     # ручной DI: Repository
+    │   ├── TarotRepository.kt  # локальная колода, draw и история
+    │   └── remote/ApiModels.kt # DTO, общие с backend-контрактом
+    ├── domain/SpreadOption.kt  # 12 раскладов, категории и позиции
+    ├── ui/
+    │   ├── AppRoot.kt          # Scaffold + нижняя панель
+    │   ├── navigation/AppNavHost.kt
+    │   ├── home/               # главный экран-хаб
+    │   ├── spreads/            # каталог с поиском и фильтрами
+    │   ├── reading/            # экран гадания по выбранной схеме
+    │   ├── history/            # история и детали
+    │   ├── components/         # общие composable
+    │   └── theme/              # тёмная тема
+    └── util/DateFormatter.kt
 ```
 
 ### Как устроен поток данных
 
 1. `TarotApplication` создаёт `AppContainer`.
-2. `AppContainer` собирает `TokenStore`, `ApiClient` и `TarotRepository`.
+2. `AppContainer` создаёт локальный `TarotRepository`.
 3. Экран получает ViewModel через фабрику, ViewModel вызывает repository.
-4. Repository обращается к Retrofit; `AuthInterceptor` подставляет JWT.
-5. ViewModel обновляет `StateFlow`, Compose перерисовывает состояние.
-6. `ApiErrors.toUserMessage()` превращает `HttpException`/`IOException` в понятный текст.
+4. Repository читает `assets/cards.json`, перемешивает колоду и выбирает карты.
+5. Результат сохраняется в `SharedPreferences` и возвращается как `ReadingDto`.
+6. ViewModel обновляет `StateFlow`, Compose перерисовывает состояние.
 
-Токен хранится в `SharedPreferences` и переживает перезапуск приложения. Выход очищает токен и возвращает на экран входа.
+История ограничена 100 раскладами; перевёрнутые карты выпадают с вероятностью 30%.
 
 ## Тесты и линт
 
@@ -204,10 +186,8 @@ keytool -genkeypair -v -keystore release-keystore.jks \
 | `Package platforms not found` | Используйте `platforms;android-37.0` или `android sdk install platforms/android-37.0` |
 | `Unsupported class file major version` | Задайте `JAVA_HOME` на JDK 21 |
 | `NavigationBarItem` не найден | Он является extension-функцией `RowScope`; вызывайте внутри `NavigationBar { ... }` или `RowScope` |
-| Приложение не подключается к API | Проверьте `10.0.2.2` для эмулятора, IP для устройства, `usesCleartextTraffic` и запущенный backend. Если запросы так и не доходят до backend, используйте `adb reverse tcp:8000 tcp:8000` и пересоберите с `-PapiBaseUrl=http://127.0.0.1:8000/` |
-| `HTTP 401` | Токен истёк/недействителен — выйдите и войдите снова |
-| `HTTP 409` при регистрации | Email уже занят |
-| `HTTP 422` | Серверная валидация: вопрос 3–500 символов, пароль ≥ 8, имя ≥ 2 |
+| История пустая после переустановки | `pm clear` или удаление приложения очищает `SharedPreferences`; это ожидаемо |
+| Ошибка Kotlin-кэша после `clean` | Остановите демон `gradlew --stop`, удалите `app/build/kotlin` и повторите сборку |
 
 ## Полезные команды
 
