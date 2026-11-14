@@ -26,7 +26,9 @@ private val MysticColorScheme = darkColorScheme(
     onError = Midnight,
     errorContainer = RoseContainer,
     onErrorContainer = Cream,
-    outline = Gold.copy(alpha = 0.45f),
+    outline = Gold.copy(alpha = 0.38f),
+    outlineVariant = Lavender.copy(alpha = 0.16f),
+    scrim = Midnight,
 )
 
 private val MysticShapes = Shapes(

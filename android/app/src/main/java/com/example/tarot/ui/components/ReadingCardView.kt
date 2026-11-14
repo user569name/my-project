@@ -2,6 +2,7 @@ package com.example.tarot.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,20 +35,25 @@ fun ReadingCardView(
 
     Surface(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f),
+        shape = RoundedCornerShape(22.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.76f),
         border = BorderStroke(
             1.dp,
-            MaterialTheme.colorScheme.primary.copy(alpha = 0.25f),
+            MaterialTheme.colorScheme.primary.copy(alpha = 0.22f),
         ),
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(17.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     modifier = Modifier
-                        .size(46.dp)
+                        .size(48.dp)
                         .background(
-                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.14f),
+                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.13f),
+                            shape = CircleShape,
+                        )
+                        .border(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
                             shape = CircleShape,
                         ),
                     contentAlignment = Alignment.Center,

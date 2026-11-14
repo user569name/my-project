@@ -2,6 +2,7 @@ package com.example.tarot.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -62,16 +63,17 @@ fun SpreadCatalogCard(
         modifier = modifier
             .fillMaxWidth()
             .heightIn(min = 196.dp),
-        shape = RoundedCornerShape(22.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-        border = BorderStroke(1.dp, accent.copy(alpha = 0.3f)),
+        shape = RoundedCornerShape(24.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.62f),
+        border = BorderStroke(1.dp, accent.copy(alpha = 0.26f)),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     modifier = Modifier
-                        .size(42.dp)
-                        .background(accent.copy(alpha = 0.14f), CircleShape),
+                        .size(44.dp)
+                        .background(accent.copy(alpha = 0.13f), CircleShape)
+                        .border(1.dp, accent.copy(alpha = 0.22f), CircleShape),
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(
@@ -85,6 +87,12 @@ fun SpreadCatalogCard(
                     text = cardCountLabel(option.positions.size),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = "✦",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = accent.copy(alpha = 0.55f),
                 )
             }
 
@@ -111,11 +119,18 @@ fun SpreadCatalogCard(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            Text(
-                text = option.category.label.uppercase(),
-                style = MaterialTheme.typography.labelSmall,
-                color = accent,
-            )
+            Surface(
+                shape = RoundedCornerShape(50),
+                color = accent.copy(alpha = 0.08f),
+                border = BorderStroke(1.dp, accent.copy(alpha = 0.16f)),
+            ) {
+                Text(
+                    text = option.category.label.uppercase(),
+                    modifier = Modifier.padding(horizontal = 9.dp, vertical = 3.dp),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = accent,
+                )
+            }
         }
     }
 }
@@ -133,16 +148,17 @@ fun SpreadCompactCard(
         modifier = modifier
             .width(220.dp)
             .heightIn(min = 168.dp),
-        shape = RoundedCornerShape(20.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f),
-        border = BorderStroke(1.dp, accent.copy(alpha = 0.28f)),
+        shape = RoundedCornerShape(22.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.56f),
+        border = BorderStroke(1.dp, accent.copy(alpha = 0.25f)),
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     modifier = Modifier
-                        .size(34.dp)
-                        .background(accent.copy(alpha = 0.14f), CircleShape),
+                        .size(36.dp)
+                        .background(accent.copy(alpha = 0.13f), CircleShape)
+                        .border(1.dp, accent.copy(alpha = 0.2f), CircleShape),
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(

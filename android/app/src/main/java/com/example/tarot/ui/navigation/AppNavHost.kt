@@ -12,19 +12,25 @@ import com.example.tarot.domain.SpreadOption
 import com.example.tarot.ui.history.HistoryScreen
 import com.example.tarot.ui.history.ReadingDetailScreen
 import com.example.tarot.ui.home.HomeScreen
+import com.example.tarot.ui.practices.PracticeDetailScreen
+import com.example.tarot.ui.practices.PracticesScreen
 import com.example.tarot.ui.reading.ReadingScreen
 import com.example.tarot.ui.spreads.SpreadsScreen
 
 object Routes {
     const val HOME = "home"
     const val SPREADS = "spreads"
+    const val PRACTICES = "practices"
     const val HISTORY = "history"
     const val READING = "reading/{readingId}"
     const val NEW_READING = "new-reading/{spreadId}"
+    const val PRACTICE_DETAIL = "practice/{practiceId}"
 
     fun reading(readingId: String): String = "reading/$readingId"
 
     fun newReading(spread: SpreadOption): String = "new-reading/${spread.apiValue}"
+
+    fun practice(practiceId: String): String = "practice/$practiceId"
 }
 
 @Composable
@@ -44,6 +50,7 @@ fun AppNavHost(
             HomeScreen(
                 repository = repository,
                 onOpenSpreads = { navController.navigate(Routes.SPREADS) },
+                onOpenPractices = { navController.navigate(Routes.PRACTICES) },
                 onOpenSpread = { spread ->
                     navController.navigate(Routes.newReading(spread))
                 },
@@ -58,6 +65,24 @@ fun AppNavHost(
                 onOpenSpread = { spread ->
                     navController.navigate(Routes.newReading(spread))
                 },
+            )
+        }
+
+        composable(Routes.PRACTICES) {
+            PracticesScreen(
+                onOpenPractice = { practiceId ->
+                    navController.navigate(Routes.practice(practiceId))
+                },
+            )
+        }
+
+        composable(
+            route = Routes.PRACTICE_DETAIL,
+            arguments = listOf(navArgument("practiceId") { type = NavType.StringType }),
+        ) { backStackEntry ->
+            PracticeDetailScreen(
+                practiceId = backStackEntry.arguments?.getString("practiceId").orEmpty(),
+                onBack = { navController.popBackStack() },
             )
         }
 

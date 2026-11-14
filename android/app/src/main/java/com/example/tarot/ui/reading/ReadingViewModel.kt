@@ -9,6 +9,7 @@ import com.example.tarot.data.TarotRepository
 import com.example.tarot.data.remote.ReadingDto
 import com.example.tarot.data.remote.toUserMessage
 import com.example.tarot.domain.SpreadOption
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -54,6 +55,8 @@ class ReadingViewModel(
             _uiState.update { it.copy(isDrawing = true, error = null, reading = null) }
             runCatching { repository.draw(question, spread) }
                 .onSuccess { reading ->
+                    // Даём анимации перемешивания время, даже если выбор занял миллисекунды.
+                    delay(900)
                     _uiState.update { it.copy(isDrawing = false, reading = reading) }
                 }
                 .onFailure { throwable ->

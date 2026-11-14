@@ -55,6 +55,8 @@ data class ReadingDto(
     @SerializedName("spread_label") val spreadLabel: String,
     @SerializedName("created_at") val createdAt: String,
     val cards: List<ReadingCardDto>,
+    /** Тема вопроса. В старых сохранённых раскладах может отсутствовать. */
+    val theme: String? = null,
 ) {
     val orderedCards: List<ReadingCardDto>
         get() = cards.sortedBy { it.position }

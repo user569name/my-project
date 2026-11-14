@@ -177,9 +177,19 @@ private fun ReadingSummaryCard(
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "${reading.spreadLabel} · ${formatReadingDate(reading.createdAt)}",
+                        text = buildString {
+                            append(reading.spreadLabel)
+                            append(" · ")
+                            append(formatReadingDate(reading.createdAt))
+                            reading.theme?.takeIf { it.isNotBlank() }?.let {
+                                append(" · ✦ ")
+                                append(it)
+                            }
+                        },
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.secondary,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
                 }
                 Spacer(modifier = Modifier.width(8.dp))

@@ -72,8 +72,31 @@ class ApiModelsTest {
     @Test
     fun `spread option values match api contract`() {
         val values = com.example.tarot.domain.SpreadOption.entries.map { it.apiValue }
-        assertEquals(listOf("single", "three", "celtic"), values)
+        assertEquals(
+            listOf(
+                "single", "three", "celtic", "horseshoe", "choice", "yesno",
+                "bridge", "spark", "career", "money", "month", "open",
+            ),
+            values,
+        )
         assertFalse(com.example.tarot.domain.SpreadOption.entries.any { it.title.isBlank() })
+    }
+
+    @Test
+    fun `old readings without theme are read with null theme`() {
+        val json = """
+            {
+              "id": "old",
+              "question": "q",
+              "spread": "three",
+              "spread_label": "Три карты",
+              "created_at": "2026-11-08T12:00:00+00:00",
+              "cards": []
+            }
+        """.trimIndent()
+
+        val reading = gson.fromJson(json, ReadingDto::class.java)
+        assertEquals(null, reading.theme)
     }
 
     private fun sampleCard(position: Int): com.example.tarot.data.remote.ReadingCardDto {

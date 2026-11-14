@@ -7,6 +7,7 @@ import com.example.tarot.data.remote.ReadingDto
 import com.example.tarot.data.remote.TarotCardDto
 import com.example.tarot.data.remote.UserDto
 import com.example.tarot.domain.SpreadOption
+import com.example.tarot.domain.TarotSelector
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
@@ -56,23 +57,27 @@ class TarotRepository(context: Context) {
             val deck = loadCards()
             check(deck.size >= positions.size) { "В колоде недостаточно карт" }
 
-            val picked = deck.shuffled().take(positions.size)
+            val trimmedQuestion = question.trim()
+            val theme = TarotSelector.detectTheme(trimmedQuestion, spread.category)
+            val picked = TarotSelector.pick(deck, spread, trimmedQuestion)
+            val reversedChance = TarotSelector.reversedChance(trimmedQuestion)
             val cards = picked.mapIndexed { index, card ->
                 ReadingCardDto(
                     position = index + 1,
                     positionName = positions[index],
-                    reversed = Random.nextFloat() < REVERSED_CHANCE,
+                    reversed = Random.nextFloat() < reversedChance,
                     card = card,
                 )
             }
 
             val reading = ReadingDto(
                 id = UUID.randomUUID().toString(),
-                question = question.trim(),
+                question = trimmedQuestion,
                 spread = spread.apiValue,
                 spreadLabel = spread.title,
                 createdAt = Instant.now().truncatedTo(ChronoUnit.SECONDS).toString(),
                 cards = cards,
+                theme = theme.label,
             )
 
             synchronized(lock) {
@@ -129,7 +134,6 @@ class TarotRepository(context: Context) {
         const val PREFS = "mystic_tarot_local"
         const val KEY_READINGS = "readings"
         const val CARDS_ASSET = "cards.json"
-        const val REVERSED_CHANCE = 0.3f
         const val MAX_READINGS = 100
     }
 }

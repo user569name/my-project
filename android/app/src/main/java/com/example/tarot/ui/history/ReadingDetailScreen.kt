@@ -135,6 +135,24 @@ fun ReadingDetailScreen(
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.secondary,
                             )
+                            if (!reading.theme.isNullOrBlank()) {
+                                Spacer(modifier = Modifier.height(7.dp))
+                                Surface(
+                                    shape = RoundedCornerShape(50),
+                                    color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.1f),
+                                    border = BorderStroke(
+                                        1.dp,
+                                        MaterialTheme.colorScheme.secondary.copy(alpha = 0.24f),
+                                    ),
+                                ) {
+                                    Text(
+                                        text = "✦ ${reading.theme}",
+                                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.secondary,
+                                    )
+                                }
+                            }
                         }
                     }
                 }

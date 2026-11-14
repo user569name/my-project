@@ -1,6 +1,6 @@
 # Mystic Tarot — Android
 
-Автономный клиент для раскладов Таро: Kotlin, Jetpack Compose (Material 3), Navigation Compose, ViewModel + StateFlow, Gson, SharedPreferences. Один Activity, ручное внедрение зависимостей. Сервер и интернет не нужны.
+Автономный клиент для раскладов Таро: Kotlin, Jetpack Compose (Material 3), Navigation Compose, ViewModel + StateFlow, Gson, SharedPreferences. Один Activity, ручное внедрение зависимостей. Сервер и интернет не нужны. Помимо раскладов, доступны 17 символических практик с расчётами на устройстве.
 
 ## Требования
 
@@ -104,13 +104,19 @@ app/src/main/
     │   ├── AppContainer.kt     # ручной DI: Repository
     │   ├── TarotRepository.kt  # локальная колода, draw и история
     │   └── remote/ApiModels.kt # DTO, общие с backend-контрактом
-    ├── domain/SpreadOption.kt  # 12 раскладов, категории и позиции
+    ├── domain/
+    │   ├── SpreadOption.kt     # 12 раскладов, категории и позиции
+    │   ├── TarotSelector.kt    # тематический подбор карт и ориентации
+    │   ├── PracticeModels.kt   # модели практик, полей и результатов
+    │   ├── PracticeCatalog.kt  # 17 практик, 30 режимов и их поля
+    │   └── PracticeEngine.kt   # офлайн-расчёты практик
     ├── ui/
     │   ├── AppRoot.kt          # Scaffold + нижняя панель
     │   ├── navigation/AppNavHost.kt
     │   ├── home/               # главный экран-хаб
     │   ├── spreads/            # каталог с поиском и фильтрами
-    │   ├── reading/            # экран гадания по выбранной схеме
+    │   ├── reading/            # экран гадания и анимация выдачи карт
+    │   ├── practices/          # каталог и экраны 17 практик
     │   ├── history/            # история и детали
     │   ├── components/         # общие composable
     │   └── theme/              # тёмная тема
@@ -122,11 +128,21 @@ app/src/main/
 1. `TarotApplication` создаёт `AppContainer`.
 2. `AppContainer` создаёт локальный `TarotRepository`.
 3. Экран получает ViewModel через фабрику, ViewModel вызывает repository.
-4. Repository читает `assets/cards.json`, перемешивает колоду и выбирает карты.
-5. Результат сохраняется в `SharedPreferences` и возвращается как `ReadingDto`.
+4. Repository читает `assets/cards.json`, передаёт колоду в `TarotSelector`: тот определяет тему вопроса и взвешенно выбирает карты под позиции расклада.
+5. Результат сохраняется в `SharedPreferences` и возвращается как `ReadingDto` вместе с темой.
 6. ViewModel обновляет `StateFlow`, Compose перерисовывает состояние.
 
-История ограничена 100 раскладами; перевёрнутые карты выпадают с вероятностью 30%.
+Практики считаются полностью на устройстве через `PracticeEngine`: даты, имена, сны и символические расклады не отправляются в сеть. История ограничена 100 раскладами. Перевёрнутые карты выпадают с вероятностью 27%, а при тревожной или негативной формулировке вопроса — до 40%.
+
+## Практики
+
+В приложении 17 практик и 30 режимов в трёх разделах:
+
+- **Нумерология**: матрица судьбы, квадрат Пифагора, график судьбы, энергетический тип, число судьбы.
+- **Астрология**: натальная карта, транзиты, бацзы, книга перемен, дизайн человека, хологенетика, города и места силы.
+- **Архетипы, сны и имена**: три архетипа, сны, книга судеб, прошлая жизнь, мир имён.
+
+Практики носят символический и развлекательный характер и не заменяют консультацию специалиста. Даты принимаются в форматах `ДД.ММ.ГГГГ`, `ГГГГ-ММ-ДД` и `ДД/ММ/ГГГГ`; несуществующие даты отклоняются.
 
 ## Тесты и линт
 
@@ -135,7 +151,7 @@ app/src/main/
 .\gradlew.bat lintDebug
 ```
 
-- Unit-тесты: `app/src/test/java/com/example/tarot/ApiModelsTest.kt` — разбор snake_case JSON, сортировка карт, контракт раскладов.
+- Unit-тесты: `ApiModelsTest.kt` (JSON и контракт раскладов), `PracticeEngineTest.kt` (17 практик / 30 режимов, матрица, даты), `TarotSelectorTest.kt` (темы, уникальность и распределение мастей).
 - Lint-отчёт: `app/build/reports/lint-results-debug.html`.
 - Отчёт тестов: `app/build/reports/tests/testDebugUnitTest/index.html`.
 
